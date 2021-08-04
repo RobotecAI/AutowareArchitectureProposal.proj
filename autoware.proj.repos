@@ -40,8 +40,8 @@ repositories:
     version: ros2
   simulator/scenario_simulator:
     type: git
-    url: https://github.com/tier4/scenario_simulator_v2.git
-    version: master
+    url: https://github.com/robotecai/scenario_simulator_v2.git
+    version: issue/AJD-237-remove_autoware_compilation_flag
   # vendor
   vendor/quaternion_operation:
     type: git
@@ -50,7 +50,7 @@ repositories:
   vendor/grid_map:
     type: git
     url: https://github.com/ANYbotics/grid_map.git
-    version: ros2
+    version: foxy-devel
   vendor/perception_pcl:
     type: git
     url: https://github.com/ros-perception/perception_pcl.git
@@ -62,7 +62,7 @@ repositories:
   vendor/topic_tools:
     type: git
     url: https://github.com/tier4/topic_tools.git
-    version: tier4/main
+    version: 3ea584f0b5c7854b7e917ce0fae047f826a1962a
   vendor/pacmod3: # TODO remove after foxy-version is released
     type: git
     url: https://github.com/astuff/pacmod3.git

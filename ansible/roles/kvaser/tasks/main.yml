@@ -1,3 +1,9 @@
+- name: lsusb
+  apt:
+    name: "usbutils"
+    state: latest
+    update_cache: yes
+  become: yes
 - name: kvaser (download library)
   become: no
   get_url:
