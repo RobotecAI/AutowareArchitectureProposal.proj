@@ -106,7 +106,7 @@ repositories:
   vendor/velodyne_vls:
     type: git
     url: https://github.com/tier4/velodyne_vls.git
-    version: ros2
+    version: 608e95fd25d2061e2c5cedd57b54b6a6052951ef
   vendor/rqt_runtime_monitor:
     type: git
     url: https://github.com/tier4/rqt_runtime_monitor.git
