@@ -50,7 +50,7 @@ repositories:
   vendor/grid_map:
     type: git
     url: https://github.com/ANYbotics/grid_map.git
-    version: foxy-devel
+    version: ros2
   vendor/perception_pcl:
     type: git
     url: https://github.com/ros-perception/perception_pcl.git
@@ -62,7 +62,7 @@ repositories:
   vendor/topic_tools:
     type: git
     url: https://github.com/tier4/topic_tools.git
-    version: 3ea584f0b5c7854b7e917ce0fae047f826a1962a
+    version: tier4/main
   vendor/pacmod3: # TODO remove after foxy-version is released
     type: git
     url: https://github.com/astuff/pacmod3.git
@@ -106,7 +106,7 @@ repositories:
   vendor/velodyne_vls:
     type: git
     url: https://github.com/tier4/velodyne_vls.git
-    version: 608e95fd25d2061e2c5cedd57b54b6a6052951ef
+    version: ros2
   vendor/rqt_runtime_monitor:
     type: git
     url: https://github.com/tier4/rqt_runtime_monitor.git
@@ -119,3 +119,20 @@ repositories:
 #    type: git
 #    url: https://github.com/tier4/tunable_static_tf_broadcaster.git
 #    version: ros2
+###### galactic 
+  other/astuff_sensor_msgs:
+    type: git
+    url: git@github.com:astuff/astuff_sensor_msgs.git 
+    version: master
+  other/automotive_autonomy_msgs:
+    type: git
+    url: git@github.com:astuff/automotive_autonomy_msgs.git 
+    version: master
+  other/Lanelet2:
+    type: git
+    url: https://github.com/fzi-forschungszentrum-informatik/Lanelet2.git 
+    version: master
+  other/mrt_cmake_modules:
+    type: git
+    url: git@github.com:KIT-MRT/mrt_cmake_modules.git 
+    version: master
