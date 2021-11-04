@@ -1,0 +1,2810 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="canonical" href="https://tier4.github.io/autoware.proj/developer_guide/knowhow/PortingToROS2/">
+      
+      <link rel="icon" href="../../../images/tier4.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
+    
+    
+      
+        <title>Porting ROS1 code to ROS2 - Autoware Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.a57b2b03.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    
+      <link rel="stylesheet" href="../../../css/tier4_color.css">
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#porting-ros1-code-to-ros2" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Autoware Documentation" class="md-header__button md-logo" aria-label="Autoware Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Autoware Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Porting ROS1 code to ROS2
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/tier4/autoware.proj/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Autoware Documentation" class="md-nav__button md-logo" aria-label="Autoware Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Autoware Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/tier4/autoware.proj/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorial/Requirements/" class="md-nav__link">
+        Requirements
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorial/HowToInstall/" class="md-nav__link">
+        How to install
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3" type="checkbox" id="__nav_2_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_3">
+          How to run
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="How to run" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          How to run
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorial/QuickStart/" class="md-nav__link">
+        Quick start
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorial/SimulationTutorial/" class="md-nav__link">
+        Simulation
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Design
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Design" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Design
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          API
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="API" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          API
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/apis/ja/concept/" class="md-nav__link">
+        Concept
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/apis/ja/list/" class="md-nav__link">
+        List
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1_3" type="checkbox" id="__nav_3_1_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1_3">
+          Proposal
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Proposal" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_1_3">
+          <span class="md-nav__icon md-icon"></span>
+          Proposal
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/apis/ja/state/" class="md-nav__link">
+        State
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2">
+          Architecture
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Architecture" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Architecture
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Sensing/Sensing/" class="md-nav__link">
+        Sensing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_3" type="checkbox" id="__nav_3_2_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_3">
+          Localization
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Localization" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          Localization
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Localization/Localization/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Localization/PoseEstimator/PoseEstimator/" class="md-nav__link">
+        Pose estimator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Localization/TwistEstimator/TwistEstimator/" class="md-nav__link">
+        Twist estimator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Localization/PoseTwistFusionFilter/PoseTwistFusionFilter/" class="md-nav__link">
+        Pose twist fusion filter
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_4" type="checkbox" id="__nav_3_2_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_4">
+          Perception
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Perception" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_4">
+          <span class="md-nav__icon md-icon"></span>
+          Perception
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Perception/Perception/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_4_2" type="checkbox" id="__nav_3_2_4_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_4_2">
+          Object recognition
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Object recognition" data-md-level="4">
+        <label class="md-nav__title" for="__nav_3_2_4_2">
+          <span class="md-nav__icon md-icon"></span>
+          Object recognition
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Perception/ObjectRecognition/Detection/Detection/" class="md-nav__link">
+        Detection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Perception/ObjectRecognition/Tracking/Tracking/" class="md-nav__link">
+        Tracking
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Perception/ObjectRecognition/Prediction/Prediction/" class="md-nav__link">
+        Prediction
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_4_3" type="checkbox" id="__nav_3_2_4_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_4_3">
+          Traffic light recognition
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Traffic light recognition" data-md-level="4">
+        <label class="md-nav__title" for="__nav_3_2_4_3">
+          <span class="md-nav__icon md-icon"></span>
+          Traffic light recognition
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Perception/TrafficLightRecognition/Detection/Detection/" class="md-nav__link">
+        Detection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Perception/TrafficLightRecognition/Classification/Classification/" class="md-nav__link">
+        Classification
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_5" type="checkbox" id="__nav_3_2_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_5">
+          Planning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Planning" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_5">
+          <span class="md-nav__icon md-icon"></span>
+          Planning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Planning/Planning/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Planning/ScenarioSelector/ScenarioSelector/" class="md-nav__link">
+        Scenario selector
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_5_3" type="checkbox" id="__nav_3_2_5_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_5_3">
+          Lane driving Scenario
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Lane driving Scenario" data-md-level="4">
+        <label class="md-nav__title" for="__nav_3_2_5_3">
+          <span class="md-nav__icon md-icon"></span>
+          Lane driving Scenario
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Planning/LaneDriving/LaneDrivingScenario/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Planning/LaneDriving/Behavior/LaneChangePlanner/" class="md-nav__link">
+        Behavior path planning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Planning/LaneDriving/Behavior/BehaviorVelocityPlanner/" class="md-nav__link">
+        Behavior velocity planning
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Planning/Parking/ParkingScenario/" class="md-nav__link">
+        Parking
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Planning/DesignRationale/" class="md-nav__link">
+        Design rationale
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_6" type="checkbox" id="__nav_3_2_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_6">
+          Control
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Control" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_6">
+          <span class="md-nav__icon md-icon"></span>
+          Control
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Control/Control/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_6_2" type="checkbox" id="__nav_3_2_6_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_6_2">
+          Trajectory follower
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Trajectory follower" data-md-level="4">
+        <label class="md-nav__title" for="__nav_3_2_6_2">
+          <span class="md-nav__icon md-icon"></span>
+          Trajectory follower
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Control/TrajectoryFollower/LateralController/" class="md-nav__link">
+        Lateral controller
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Control/TrajectoryFollower/LongitudinalController/" class="md-nav__link">
+        Longitudinal controller
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Control/TrajectoryFollower/LatLonCoupler/" class="md-nav__link">
+        Lateral longitudinal coupler
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Control/VehicleCmdGate/VehicleCmdGate/" class="md-nav__link">
+        Vehicle cmd gate
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Vehicle/Vehicle/" class="md-nav__link">
+        Vehicle
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/Map/Map/" class="md-nav__link">
+        Map
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/TF/" class="md-nav__link">
+        TF
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/NamingConvention/" class="md-nav__link">
+        Naming convention
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/ForDevelopers/" class="md-nav__link">
+        For developers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/software_architecture/NodeDiagram/" class="md-nav__link">
+        Node diagram
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/repository/Repository/" class="md-nav__link">
+        Repository
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/release/Release/" class="md-nav__link">
+        Release
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          DeveloperGuide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="DeveloperGuide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          DeveloperGuide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CodingGuideline/" class="md-nav__link">
+        Coding guideline
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PullRequestGuideline/" class="md-nav__link">
+        Pull request guideline
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UnitTestGuideline/" class="md-nav__link">
+        Unit test guideline
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ClangTidyGuideline/" class="md-nav__link">
+        Clang-Tidy guideline
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5">
+          Knowhow
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Knowhow" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_5">
+          <span class="md-nav__icon md-icon"></span>
+          Knowhow
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Porting ROS1 code to ROS2
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Porting ROS1 code to ROS2
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-the-environment" class="md-nav__link">
+    Setting up the environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#important-changes" class="md-nav__link">
+    Important changes
+  </a>
+  
+    <nav class="md-nav" aria-label="Important changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rewriting-packagexml" class="md-nav__link">
+    Rewriting package.xml
+  </a>
+  
+    <nav class="md-nav" aria-label="Rewriting package.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-which-dependency-tag" class="md-nav__link">
+    When to use which dependency tag
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rewriting-cmakeliststxt" class="md-nav__link">
+    Rewriting CMakeLists.txt
+  </a>
+  
+    <nav class="md-nav" aria-label="Rewriting CMakeLists.txt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ament_cmake-and-ament_cmake_auto" class="md-nav__link">
+    ament_cmake and ament_cmake_auto
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-standard" class="md-nav__link">
+    C++ standard
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compiler-flags" class="md-nav__link">
+    Compiler flags
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linters" class="md-nav__link">
+    Linters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replacing-std_msgs" class="md-nav__link">
+    Replacing std_msgs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changing-the-namespaces-and-header-files-for-generated-message-types" class="md-nav__link">
+    Changing the namespaces and header files for generated message types
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapting-message-definitions" class="md-nav__link">
+    Adapting message definitions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inheriting-from-node-instead-of-nodehandle-members" class="md-nav__link">
+    Inheriting from Node instead of NodeHandle members
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#latched-topics" class="md-nav__link">
+    Latched topics
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timing-issues" class="md-nav__link">
+    Timing issues
+  </a>
+  
+    <nav class="md-nav" aria-label="Timing issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-with-timer-driven-patterns" class="md-nav__link">
+    The Problem with Timer-Driven Patterns
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preferred-patterns" class="md-nav__link">
+    Preferred Patterns
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replicating-rostimer" class="md-nav__link">
+    Replicating ros::Timer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rosbag-recording" class="md-nav__link">
+    Rosbag recording
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+    <nav class="md-nav" aria-label="Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adjust-code" class="md-nav__link">
+    Adjust code
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic_reconfigure" class="md-nav__link">
+    dynamic_reconfigure
+  </a>
+  
+    <nav class="md-nav" aria-label="dynamic_reconfigure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cfg-files" class="md-nav__link">
+    cfg files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#header-file" class="md-nav__link">
+    Header file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-file" class="md-nav__link">
+    Implementation file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-client-discouraged" class="md-nav__link">
+    Parameter client [discouraged]
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adjust-param-file" class="md-nav__link">
+    Adjust param file
+  </a>
+  
+    <nav class="md-nav" aria-label="Adjust param file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    Types
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch-file" class="md-nav__link">
+    Launch file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replacing-tf2_rosbuffer" class="md-nav__link">
+    Replacing tf2_ros::Buffer
+  </a>
+  
+    <nav class="md-nav" aria-label="Replacing tf2_ros::Buffer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#avoiding-a-lookup-with-timeout" class="md-nav__link">
+    Avoiding a lookup with timeout
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-you-cant-avoid-a-lookup-with-timeout" class="md-nav__link">
+    When you can't avoid a lookup with timeout
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-about-waitfortransform" class="md-nav__link">
+    What about waitForTransform()?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-pointers" class="md-nav__link">
+    Shared pointers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-clients" class="md-nav__link">
+    Service clients
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    Logging
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shutting-down-a-subscriber" class="md-nav__link">
+    Shutting down a subscriber
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#durations" class="md-nav__link">
+    Durations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternative-semi-automated-porting-with-ros2-migration-tools-not-working" class="md-nav__link">
+    Alternative: Semi-automated porting with ros2-migration-tools (not working)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#strange-errors-and-their-causes" class="md-nav__link">
+    Strange errors and their causes
+  </a>
+  
+    <nav class="md-nav" aria-label="Strange errors and their causes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#packagexml-errors" class="md-nav__link">
+    package.xml errors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yaml-param-file" class="md-nav__link">
+    YAML param file
+  </a>
+  
+    <nav class="md-nav" aria-label="YAML param file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tabs-instead-of-spaces" class="md-nav__link">
+    Tabs instead of spaces
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-indentation" class="md-nav__link">
+    No indentation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          License/Credit
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="License/Credit" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          License/Credit
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Credits/" class="md-nav__link">
+        Credits
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../License/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-the-environment" class="md-nav__link">
+    Setting up the environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#important-changes" class="md-nav__link">
+    Important changes
+  </a>
+  
+    <nav class="md-nav" aria-label="Important changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rewriting-packagexml" class="md-nav__link">
+    Rewriting package.xml
+  </a>
+  
+    <nav class="md-nav" aria-label="Rewriting package.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-which-dependency-tag" class="md-nav__link">
+    When to use which dependency tag
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rewriting-cmakeliststxt" class="md-nav__link">
+    Rewriting CMakeLists.txt
+  </a>
+  
+    <nav class="md-nav" aria-label="Rewriting CMakeLists.txt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ament_cmake-and-ament_cmake_auto" class="md-nav__link">
+    ament_cmake and ament_cmake_auto
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-standard" class="md-nav__link">
+    C++ standard
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compiler-flags" class="md-nav__link">
+    Compiler flags
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linters" class="md-nav__link">
+    Linters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replacing-std_msgs" class="md-nav__link">
+    Replacing std_msgs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changing-the-namespaces-and-header-files-for-generated-message-types" class="md-nav__link">
+    Changing the namespaces and header files for generated message types
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapting-message-definitions" class="md-nav__link">
+    Adapting message definitions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inheriting-from-node-instead-of-nodehandle-members" class="md-nav__link">
+    Inheriting from Node instead of NodeHandle members
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#latched-topics" class="md-nav__link">
+    Latched topics
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timing-issues" class="md-nav__link">
+    Timing issues
+  </a>
+  
+    <nav class="md-nav" aria-label="Timing issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-with-timer-driven-patterns" class="md-nav__link">
+    The Problem with Timer-Driven Patterns
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preferred-patterns" class="md-nav__link">
+    Preferred Patterns
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replicating-rostimer" class="md-nav__link">
+    Replicating ros::Timer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rosbag-recording" class="md-nav__link">
+    Rosbag recording
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+    <nav class="md-nav" aria-label="Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adjust-code" class="md-nav__link">
+    Adjust code
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic_reconfigure" class="md-nav__link">
+    dynamic_reconfigure
+  </a>
+  
+    <nav class="md-nav" aria-label="dynamic_reconfigure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cfg-files" class="md-nav__link">
+    cfg files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#header-file" class="md-nav__link">
+    Header file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-file" class="md-nav__link">
+    Implementation file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-client-discouraged" class="md-nav__link">
+    Parameter client [discouraged]
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adjust-param-file" class="md-nav__link">
+    Adjust param file
+  </a>
+  
+    <nav class="md-nav" aria-label="Adjust param file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    Types
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch-file" class="md-nav__link">
+    Launch file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replacing-tf2_rosbuffer" class="md-nav__link">
+    Replacing tf2_ros::Buffer
+  </a>
+  
+    <nav class="md-nav" aria-label="Replacing tf2_ros::Buffer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#avoiding-a-lookup-with-timeout" class="md-nav__link">
+    Avoiding a lookup with timeout
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-you-cant-avoid-a-lookup-with-timeout" class="md-nav__link">
+    When you can't avoid a lookup with timeout
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-about-waitfortransform" class="md-nav__link">
+    What about waitForTransform()?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-pointers" class="md-nav__link">
+    Shared pointers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-clients" class="md-nav__link">
+    Service clients
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    Logging
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shutting-down-a-subscriber" class="md-nav__link">
+    Shutting down a subscriber
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#durations" class="md-nav__link">
+    Durations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternative-semi-automated-porting-with-ros2-migration-tools-not-working" class="md-nav__link">
+    Alternative: Semi-automated porting with ros2-migration-tools (not working)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#strange-errors-and-their-causes" class="md-nav__link">
+    Strange errors and their causes
+  </a>
+  
+    <nav class="md-nav" aria-label="Strange errors and their causes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#packagexml-errors" class="md-nav__link">
+    package.xml errors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yaml-param-file" class="md-nav__link">
+    YAML param file
+  </a>
+  
+    <nav class="md-nav" aria-label="YAML param file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tabs-instead-of-spaces" class="md-nav__link">
+    Tabs instead of spaces
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-indentation" class="md-nav__link">
+    No indentation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/tier4/autoware.proj/edit/main/docs/developer_guide/knowhow/PortingToROS2.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="porting-ros1-code-to-ros2">Porting ROS1 code to ROS2<a class="headerlink" href="#porting-ros1-code-to-ros2" title="Permanent link">#</a></h1>
+<h2 id="setting-up-the-environment">Setting up the environment<a class="headerlink" href="#setting-up-the-environment" title="Permanent link">#</a></h2>
+<p>Do the following to setup and start ADE environment</p>
+<ol>
+<li>
+<p>Setup ade home</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ~
+mkdir ade-home
+<span class="nb">cd</span> ade-home
+touch .adehome
+</code></pre></div>
+</li>
+<li>
+<p>Setup AutowareArchitectureProposal</p>
+<div class="highlight"><pre><span></span><code>git clone https://github.com/tier4/AutowareArchitectureProposal
+<span class="nb">cd</span> AutowareArchitectureProposal
+git checkout ros2
+</code></pre></div>
+</li>
+<li>
+<p>enter ADE</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ~/ade-home/AutowareArchitectureProposal
+ade start --update --enter
+<span class="nb">cd</span> AutowareArchitectureProposal
+</code></pre></div>
+<p>All commands that follow are to be entered in ADE. Next step is to fetch the sub-repos:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ~/AutowareArchitectureProposal
+mkdir src
+vcs import src &lt; autoware.proj.repos
+rosdep update
+rosdep install -y --from-paths src --ignore-src --rosdistro foxy
+colcon build --event-handlers console_cohesion+
+</code></pre></div>
+<p>For instance, the <code>shift_decider</code> package is in the repository <code>github.com:tier4/pilot.auto.git</code>, which is now in the <code>autoware/pilot.auto</code> subdirectory.</p>
+<p>Now branch off <code>ros2</code> inside that subdirectory and delete the <code>COLCON_IGNORE</code> file in the package you want to port.</p>
+</li>
+</ol>
+<h2 id="important-changes">Important changes<a class="headerlink" href="#important-changes" title="Permanent link">#</a></h2>
+<p>The best source on migrating is the <a href="https://index.ros.org/doc/ros2/Contributing/Migration-Guide/">migration guide</a>. It doesn't mention everything though, so this section lists some areas with important changes.</p>
+<p>A good general strategy is to try to implement those changes, then iteratively run <code>colcon build --packages-up-to &lt;your_package&gt;</code> and fix the first compiler error.</p>
+<h3 id="rewriting-packagexml">Rewriting <code>package.xml</code><a class="headerlink" href="#rewriting-packagexml" title="Permanent link">#</a></h3>
+<p>The migration guide covers this well. See also <a href="https://www.ros.org/reps/rep-0149.html">here</a> for a reference of the most recent version of this format.</p>
+<h4 id="when-to-use-which-dependency-tag">When to use which dependency tag<a class="headerlink" href="#when-to-use-which-dependency-tag" title="Permanent link">#</a></h4>
+<p>Any build tool needed only to set up the build needs <code>buildtool_depend</code>; e.g.,</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;buildtool_depend&gt;</span>ament_cmake<span class="nt">&lt;/buildtool_depend&gt;</span>
+<span class="nt">&lt;buildtool_depend&gt;</span>rosidl_default_generators<span class="nt">&lt;/buildtool_depend&gt;</span>
+</code></pre></div>
+<p>Any external package included with <code>#include</code> in the files (source or headers) needs to have a corresponding <code>&lt;build_depend&gt;</code>; e.g.,</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;build_depend&gt;</span>logging<span class="nt">&lt;/build_depend&gt;</span>
+</code></pre></div>
+<p>Any external package included with <code>#include</code> in the header files also needs to have a corresponding <code>&lt;build_export_depend&gt;</code>; e.g.,</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;build_export_depend&gt;</span>eigen<span class="nt">&lt;/build_export_depend&gt;</span>
+</code></pre></div>
+<p>Any shared library that needs to be linked when the code is executed needs to have a corresponding <code>&lt;exec_depend&gt;</code>: this describes the runtime dependencies; e.g.,</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;exec_depend&gt;</span>std_msgs<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="nt">&lt;exec_depend&gt;</span>rosidl_default_runtime<span class="nt">&lt;/exec_depend&gt;</span>
+</code></pre></div>
+<p>If a package falls under all three categories (<code>&lt;build_depend&gt;</code>, <code>&lt;build_export_depend&gt;</code>, and <code>&lt;exec_depend&gt;</code>), it is possible to just use <code>&lt;depend&gt;</code></p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;depend&gt;</span>shift_decider<span class="nt">&lt;/depend&gt;</span>
+</code></pre></div>
+<h3 id="rewriting-cmakeliststxt">Rewriting <code>CMakeLists.txt</code><a class="headerlink" href="#rewriting-cmakeliststxt" title="Permanent link">#</a></h3>
+<p>This is not always straightforward. A starting point is to look at the <a href="https://index.ros.org/doc/ros2/Tutorials/Writing-A-Simple-Cpp-Publisher-And-Subscriber/#cpppubsub">pub-sub tutorial</a>. This uses <code>ament_cmake</code>, which has a <a href="https://index.ros.org/doc/ros2/Tutorials/Ament-CMake-Documentation/">relatively good guide</a> that still doesn't cover everything (like what to do when installing an executable).</p>
+<h4 id="ament_cmake-and-ament_cmake_auto"><code>ament_cmake</code> and <code>ament_cmake_auto</code><a class="headerlink" href="#ament_cmake-and-ament_cmake_auto" title="Permanent link">#</a></h4>
+<p>One drawback of <code>ament_cmake</code> is that it requires typing out the dependencies at least twice, once in <code>package.xml</code> and once or more in <code>CMakeLists.txt</code>.</p>
+<p>Another possibility is to use <code>ament_auto</code> to get terse <code>CMakeLists.txt</code>. See <a href="https://github.com/tier4/Pilot.Auto/pull/7/commits/ef382a9b430fd69cb0a0f7ca57016d66ed7ef29d">this commit</a> for an example. Unfortunately, there is no documentation for this tool, so you can only learn it from examples and reading the source code. It is also limited in what it does – it cannot currently generate message definitions, for instance, and always links all dependencies to all targets.</p>
+<p>There are more subtle issues too, like <code>ament_auto_find_build_dependencies()</code>. It just takes all the build dependencies verbatim from <code>package.xml</code> and calls <code>find_package()</code> without the <code>REQUIRED</code> option. This causes an issue when your library has a different name in <code>package.xml</code>/<code>rosdep</code> and in <code>CMake</code>. It also removes safety, as this won't complain when you mistype a package name or haven't installed the package yet. For these reasons, it's recommended to do the following:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Mark all packages as REQUIRED</span>
+<span class="nb">ament_auto_find_build_dependencies</span><span class="p">(</span><span class="s">REQUIRED</span>
+  <span class="o">${</span><span class="nv">${PROJECT_NAME</span><span class="o">}</span><span class="s">_BUILD_DEPENDS}</span>
+  <span class="o">${</span><span class="nv">${PROJECT_NAME</span><span class="o">}</span><span class="s">_BUILDTOOL_DEPENDS}</span>
+<span class="p">)</span>
+</code></pre></div>
+<h4 id="c-standard">C++ standard<a class="headerlink" href="#c-standard" title="Permanent link">#</a></h4>
+<p>Add the following to ensure that a specific standard is required and extensions are not allowed</p>
+<div class="highlight"><pre><span></span><code><span class="nb">if</span><span class="p">(</span><span class="s">NOT</span> <span class="s">CMAKE_CXX_STANDARD</span><span class="p">)</span>
+  <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span> <span class="s">14</span><span class="p">)</span>
+  <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span> <span class="s">ON</span><span class="p">)</span>
+  <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_EXTENSIONS</span> <span class="s">OFF</span><span class="p">)</span>
+<span class="nb">endif</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="compiler-flags">Compiler flags<a class="headerlink" href="#compiler-flags" title="Permanent link">#</a></h4>
+<p>Make sure that flags are added only for specific compilers. Not everyone uses <code>gcc</code> or <code>clang</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">if</span><span class="p">(</span><span class="s">CMAKE_COMPILER_IS_GNUCXX</span> <span class="s">OR</span> <span class="s">CMAKE_CXX_COMPILER_ID</span> <span class="s">MATCHES</span> <span class="s2">&quot;Clang&quot;</span><span class="p">)</span>
+  <span class="nb">add_compile_options</span><span class="p">(</span><span class="s">-Wall</span> <span class="s">-Wextra</span> <span class="s">-Wpedantic</span> <span class="s">-Wno-unused-parameter</span><span class="p">)</span>
+<span class="nb">endif</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="linters">Linters<a class="headerlink" href="#linters" title="Permanent link">#</a></h4>
+<p>Add only <code>ament_cmake_cppcheck</code> to the list of linters in <code>package.xml</code></p>
+<div class="highlight"><pre><span></span><code>  <span class="nt">&lt;test_depend&gt;</span>ament_lint_auto<span class="nt">&lt;/test_depend&gt;</span>
+  <span class="nt">&lt;test_depend&gt;</span>ament_cmake_cppcheck<span class="nt">&lt;/test_depend&gt;</span>
+</code></pre></div>
+<p>And the corresponding code in <code>CMakeLists.txt</code></p>
+<div class="highlight"><pre><span></span><code><span class="nb">if</span><span class="p">(</span><span class="s">BUILD_TESTING</span><span class="p">)</span>
+  <span class="nb">find_package</span><span class="p">(</span><span class="s">ament_lint_auto</span> <span class="s">REQUIRED</span><span class="p">)</span>
+  <span class="nb">ament_lint_auto_find_test_dependencies</span><span class="p">()</span>
+<span class="nb">endif</span><span class="p">()</span>
+</code></pre></div>
+<p>Additionally, we use <code>clang-tidy</code>, in order for it to work, we need to build packages with the following:</p>
+<div class="highlight"><pre><span></span><code>colcon build --packages-up-to &lt;pkg_name&gt; --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+<p>And then:</p>
+<div class="highlight"><pre><span></span><code>clang-tidy -p build/compile_commands.json &lt;path_to_pkg_source&gt;
+</code></pre></div>
+<p>To check the output of the linters we can just run the tests with:</p>
+<div class="highlight"><pre><span></span><code>colcon <span class="nb">test</span> --packages-select &lt;pkg_name&gt; <span class="o">&amp;&amp;</span> colcon test-result --verbose
+</code></pre></div>
+<h3 id="replacing-std_msgs">Replacing <code>std_msgs</code><a class="headerlink" href="#replacing-std_msgs" title="Permanent link">#</a></h3>
+<p>In ROS2, you should define semantically meaningful wrappers around primitive (number) types. They are deprecated in Foxy.</p>
+<h3 id="changing-the-namespaces-and-header-files-for-generated-message-types">Changing the namespaces and header files for generated message types<a class="headerlink" href="#changing-the-namespaces-and-header-files-for-generated-message-types" title="Permanent link">#</a></h3>
+<p>If you follow the migration guide and change the included headers to have an extra <code>/msg</code> in the path and convert to <code>snake_case</code>, you might get a cryptic error. Turns out <em>two</em> files are being generated: One for C types (<code>.h</code> headers) and one for CPP types (<code>.hpp</code> headers). So don't forget to change <code>.h</code> to <code>.hpp</code> too. Also, don't forget to insert an additional <code>::msg</code> between the package namespace and the class name.</p>
+<p>A tip: Sublime Text has a handy "Case Conversion" package for converting to snake case.</p>
+<h3 id="adapting-message-definitions">Adapting message definitions<a class="headerlink" href="#adapting-message-definitions" title="Permanent link">#</a></h3>
+<p>If your message included something like <code>Header header</code>, it needs to be changed to <code>std_msgs/Header header</code>. Otherwise you'll see messages like <code>fatal error: autoware_api_msgs/msg/detail/header__struct.hpp: No such file or directory</code>.</p>
+<h3 id="inheriting-from-node-instead-of-nodehandle-members">Inheriting from Node instead of NodeHandle members<a class="headerlink" href="#inheriting-from-node-instead-of-nodehandle-members" title="Permanent link">#</a></h3>
+<p>That's where differences start to show – I decided to make the <code>VehicleCmdGate</code> a <code>Node</code> even though the filename would suggest that <code>vehicle_cmd_gate_node.cpp</code> would be it. That's because it has publishers, subscribers, and logging. It previously had <em>two</em> NodeHandles, a public one and a private one (<code>"~"</code>). The public one was unused and could be removed. Private nodes are not supported in ROS2, so I simply made it public, but that is an area that needs to be brought up in review.</p>
+<h3 id="latched-topics">Latched topics<a class="headerlink" href="#latched-topics" title="Permanent link">#</a></h3>
+<p>For each latched publisher, you can use <code>transient_local</code> durability QoS on the publisher, e.g. when the history depth is 1:</p>
+<div class="highlight"><pre><span></span><code><span class="n">rclcpp</span><span class="o">::</span><span class="n">QoS</span><span class="w"> </span><span class="n">durable_qos</span><span class="p">{</span><span class="mi">1</span><span class="p">};</span><span class="w"></span>
+<span class="n">durable_qos</span><span class="p">.</span><span class="n">transient_local</span><span class="p">();</span><span class="w"></span>
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code><span class="n">rclcpp</span><span class="o">::</span><span class="n">QoS</span><span class="w"> </span><span class="n">durable_qos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">QoS</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">transient_local</span><span class="p">();</span><span class="w"></span>
+</code></pre></div>
+<p>However, all subscribers to that topic will also need <code>transient_local</code> durability. If this is omitted, the connection between the two will be negotiated to be volatile, i.e. old messages will not be delivered when the subscriber comes online.</p>
+<h3 id="timing-issues">Timing issues<a class="headerlink" href="#timing-issues" title="Permanent link">#</a></h3>
+<p>First, if the timer can be replaced with a data-driven pattern, it is the preferred alternative for the long term:</p>
+<h4 id="the-problem-with-timer-driven-patterns">The Problem with Timer-Driven Patterns<a class="headerlink" href="#the-problem-with-timer-driven-patterns" title="Permanent link">#</a></h4>
+<p>It is well understood that a polling or timer-driven pattern increases jitter (i.e. variance of latency). (Consider, for example: if every data processing node in a chain operates on a timer what is the best and worst case latency?) As a consequence for more timing-sensitive applications, it is generally not preferred to use a timer-driven pattern.</p>
+<p>On top of this, it is also reasonably well known that <a href="https://martinfowler.com/articles/nonDeterminism.html">use of the clock is nondeterministic</a> and internally this has been a large source of frustration with bad, or timing sensitive tests. Such tests typically require specific timing and/or implicitly require a certain execution order (loosely enforced by timing assumptions rather than explicitly via the code).</p>
+<p>As a whole, introducing the clock explicitly (or implicitly via timers) is problematic because it introduces additional state, and thus assumptions on the requirements for the operation of the component. Consider also leap seconds and how that might ruin the operation and/or assumptions needed for the proper operation of the component.</p>
+<h4 id="preferred-patterns">Preferred Patterns<a class="headerlink" href="#preferred-patterns" title="Permanent link">#</a></h4>
+<p>In general, a data-driven pattern should be preferred to a timer-driven pattern. One reasonable exception to this guideline is the state estimator/filter at the end of localization. A timer-driven pattern in this context is useful to provide smooth behavior and promote looser coupling between the planning stack and the remainder of the stack.</p>
+<p>The core idea behind a data-driven pattern is that as soon as data arrives, it should be appropriately processed. Furthermore, the system clock (or any other source of time) should not be used to manipulate data or the timestamps. This pattern is valuable since it implicitly cuts down on hidden state (being the clock), and thus simplifies assumptions needed for the node to work.</p>
+<p>For examples of this kind of pattern, see the lidar object detection stack in Autoware.Auto. By not using any mention of the clock save for in the drivers, the stack can run equivalently on bag data, simulation data, or live data. A similar pattern with multiple inputs can be seen in the MPC implementation both internally and externally.</p>
+<h4 id="replicating-rostimer">Replicating <code>ros::Timer</code><a class="headerlink" href="#replicating-rostimer" title="Permanent link">#</a></h4>
+<p>Assuming you still want to replicate the existing <code>ros::Timer</code> functionality: There is <code>rclcpp::WallTimer</code>, which has a similar interface, but it's not equivalent. The wall timer uses a wall clock (<code>RCL_STEADY_TIME</code> clock), i.e. it doesn't listen to the <code>/clock</code> topic populated by simulation time. That the timer doesn't stop when simulation time stops, and doesn't go faster/slower when simulation time goes faster or slower.</p>
+<p>By contrast, the <code>GenericTimer</code> provides an interface to supply a clock, but there is no convenient function for setting up such a timer, comparable to <code>Node::create_wall_timer</code>. For now, this works:</p>
+<div class="highlight"><pre><span></span><code><span class="k">auto</span><span class="w"> </span><span class="n">timer_callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">VehicleCmdGate</span><span class="o">::</span><span class="n">onTimer</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">);</span><span class="w"></span>
+<span class="k">auto</span><span class="w"> </span><span class="n">period</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">nanoseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">duration</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">update_period_</span><span class="p">));</span><span class="w"></span>
+<span class="n">timer_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">GenericTimer</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">timer_callback</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="w"></span>
+<span class="w">  </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_clock</span><span class="p">(),</span><span class="w"> </span><span class="n">period</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">timer_callback</span><span class="p">),</span><span class="w"></span>
+<span class="w">  </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_node_base_interface</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_context</span><span class="p">());</span><span class="w"></span>
+<span class="k">this</span><span class="o">-&gt;</span><span class="n">get_node_timers_interface</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">add_timer</span><span class="p">(</span><span class="n">timer_</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>Also, this doesn't work, even with a subsequent <code>add_timer()</code> call:</p>
+<div class="highlight"><pre><span></span><code><span class="n">timer_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">create_timer</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_clock</span><span class="p">(),</span><span class="w"> </span><span class="n">period</span><span class="p">,</span><span class="w"> </span><span class="n">timer_callback</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<h4 id="rosbag-recording">Rosbag recording<a class="headerlink" href="#rosbag-recording" title="Permanent link">#</a></h4>
+<p>Unfortunately, one additional problem remains. <code>ros2 bag</code> does not record <code>/clock</code> (aka sim time) whereas <code>rosbag</code> does. This implies that in order to get the same behavior in ROS 2, either:</p>
+<ul>
+<li><code>rosbag</code> along with the <code>ros1_bridge</code> must be used</li>
+<li>Some explicit time source must be used and explicitly recorded by <code>ros2 bag</code></li>
+</ul>
+<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h3>
+<p>It's not strictly necessary, but you probably want to make sure the filename is <code>xyz.param.yaml</code>. Then come two steps:</p>
+<h4 id="adjust-code">Adjust code<a class="headerlink" href="#adjust-code" title="Permanent link">#</a></h4>
+<div class="highlight"><pre><span></span><code><span class="kt">double</span><span class="w"> </span><span class="n">vel_lim</span><span class="p">;</span><span class="w"></span>
+<span class="n">pnh_</span><span class="p">.</span><span class="n">param</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;vel_lim&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">vel_lim</span><span class="p">,</span><span class="w"> </span><span class="mf">25.0</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>becomes</p>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">vel_lim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">declare_parameter</span><span class="p">(</span><span class="s">&quot;vel_lim&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">25.0</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>which is equivalent to</p>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">vel_lim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">declare_parameter</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;vel_lim&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">25.0</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>This allows to set the initial value e.g. via a parameter file.</p>
+<p><strong>NOTE</strong> Calling <code>ros2 param set &lt;NODE&gt; vel_lim 1.234</code> after starting the node works but will not
+alter the member <code>vel_lim</code>! See the section below on <em>dynamic reconfigure</em> to achieve that.</p>
+<h3 id="dynamic_reconfigure"><code>dynamic_reconfigure</code><a class="headerlink" href="#dynamic_reconfigure" title="Permanent link">#</a></h3>
+<p>Dynamic reconfigure as it existed in ROS1 does not exist anymore in ROS2 and can be achieved by
+simpler means using a parameter callback.</p>
+<h4 id="cfg-files"><code>cfg</code> files<a class="headerlink" href="#cfg-files" title="Permanent link">#</a></h4>
+<p>Remove the package's <code>.cfg</code> file and associated <code>cfg/</code> subdirectory.</p>
+<h4 id="header-file">Header file<a class="headerlink" href="#header-file" title="Permanent link">#</a></h4>
+<p>In the header file, remove includes of <code>dynamic_reconfigure</code> and the node-specific config file. As a concrete example,
+take the <a href="https://github.com/tier4/Pilot.Auto/pull/52">MPC follower</a></p>
+<div class="highlight"><pre><span></span><code><span class="gd">-#include &lt;dynamic_reconfigure/server.h&gt;</span>
+<span class="gd">-#include &lt;mpc_follower/MPCFollowerConfig.h&gt;</span>
+</code></pre></div>
+<p>you need to set a parameter handler and callback function:</p>
+<div class="highlight"><pre><span></span><code><span class="n">OnSetParametersCallbackHandle</span><span class="o">::</span><span class="n">SharedPtr</span><span class="w"> </span><span class="n">set_param_res_</span><span class="p">;</span><span class="w"></span>
+<span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">SetParametersResult</span><span class="w"> </span><span class="nf">paramCallback</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Parameter</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">parameters</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>If there are many parameters (rule of thumb: more than 2), it is more practical to group them in a
+struct defined within the node's declaration:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">MPCFollower</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Node</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+
+<span class="w">  </span><span class="k">struct</span> <span class="nc">MPCParam</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">prediction_horizon</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">...</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="n">mpc_param</span><span class="p">;</span><span class="w"></span>
+
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+<p>Add a method to declare all the parameters</p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">declareMPCparameters</span><span class="p">();</span><span class="w"></span>
+</code></pre></div>
+<h4 id="implementation-file">Implementation file<a class="headerlink" href="#implementation-file" title="Permanent link">#</a></h4>
+<p>Write the following into the definition of the class that inherits from <code>rclcpp::Node</code>.</p>
+<p>A few macros and a utility function can help keep the following code clean and void of redundancy. These macros are optional but help when many parameters are to be updated dynamically.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#define DECLARE_MPC_PARAM(PARAM_STRUCT, NAME, VALUE) \</span>
+<span class="cp">  PARAM_STRUCT.NAME = declare_parameter(&quot;mpc_&quot; #NAME, VALUE)</span>
+
+<span class="cp">#define UPDATE_MPC_PARAM(PARAM_STRUCT, NAME) \</span>
+<span class="cp">  update_param(parameters, &quot;mpc_&quot; #NAME, PARAM_STRUCT.NAME)</span>
+
+<span class="k">namespace</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="o">&gt;</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">update_param</span><span class="p">(</span><span class="w"></span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Parameter</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">parameters</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">cbegin</span><span class="p">(),</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">cend</span><span class="p">(),</span><span class="w"></span>
+<span class="w">    </span><span class="p">[</span><span class="o">&amp;</span><span class="n">name</span><span class="p">](</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Parameter</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">parameter</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">parameter</span><span class="p">.</span><span class="n">get_name</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">cend</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="k">template</span><span class="w"> </span><span class="n">get_value</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace</span>
+</code></pre></div>
+<p>In the constructor, define the callback and declare parameters with default values</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// the type of the ROS parameter is defined by the C++ type of the default value,</span>
+<span class="c1">// so 50 is not equivalent to 50.0!</span>
+<span class="n">DECLARE_MPC_PARAM</span><span class="p">(</span><span class="n">mpc_param_</span><span class="p">,</span><span class="w"> </span><span class="n">prediction_horizon</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">);</span><span class="w"></span>
+
+<span class="c1">// set parameter callback</span>
+<span class="n">set_param_res_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">add_on_set_parameters_callback</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MPCFollower</span><span class="o">::</span><span class="n">paramCallback</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">_1</span><span class="p">));</span><span class="w"></span>
+</code></pre></div>
+<p>Inside the callback, you have to manually update each parameter for which you want to react to change from the outside. You can (inadvertently) declare more parameters than you react to.</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">SetParametersResult</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">result</span><span class="p">.</span><span class="n">successful</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">result</span><span class="p">.</span><span class="n">reason</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">  </span><span class="c1">// strong exception safety wrt MPCParam</span>
+<span class="w">  </span><span class="n">MPCParam</span><span class="w"> </span><span class="n">param</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mpc_param_</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">UPDATE_MPC_PARAM</span><span class="p">(</span><span class="n">param</span><span class="p">,</span><span class="w"> </span><span class="n">prediction_horizon</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// update all other parameters, too</span>
+
+<span class="w">    </span><span class="c1">// transaction succeeds, now assign values</span>
+<span class="w">    </span><span class="n">mpc_param_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">exceptions</span><span class="o">::</span><span class="n">InvalidParameterTypeException</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">result</span><span class="p">.</span><span class="n">successful</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">result</span><span class="p">.</span><span class="n">reason</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">();</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w"></span>
+</code></pre></div>
+<p>When the node is running, you can set the parameter dynamically with the following command. The value is converted to a type as in C++, so setting an <code>int</code> to 51.0 leads to an <code>InvalidParameterTypeException</code> in the callback.</p>
+<div class="highlight"><pre><span></span><code>ros2 param <span class="nb">set</span> /mpc_follower prediction_horizon <span class="m">51</span>
+</code></pre></div>
+<p>Make sure relevant parameters can be set from the command line or <code>rqt</code> and changes are reflected by
+the package.</p>
+<h4 id="parameter-client-discouraged">Parameter client [discouraged]<a class="headerlink" href="#parameter-client-discouraged" title="Permanent link">#</a></h4>
+<p>The parameter client is another way to dynamically set the parameter defined in the node. The client subscribes to the <code>/parameter_event</code> topic and call the callback function. This allows the client node to get all the information about parameter changes in every node. The callback argument contains the target node name, which can be used to determine which node the parameter change is for.</p>
+<p>In .hpp,</p>
+<div class="highlight"><pre><span></span><code><span class="n">rclcpp</span><span class="o">::</span><span class="n">AsyncParametersClient</span><span class="o">::</span><span class="n">SharedPtr</span><span class="w"> </span><span class="n">param_client_</span><span class="p">;</span><span class="w"></span>
+<span class="n">rclcpp</span><span class="o">::</span><span class="n">Subscription</span><span class="o">&lt;</span><span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">ParameterEvent</span><span class="o">&gt;::</span><span class="n">SharedPtr</span><span class="w"> </span><span class="n">sub_param_event_</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">paramCallback</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">ParameterEvent</span><span class="o">::</span><span class="n">SharedPtr</span><span class="w"> </span><span class="n">event</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>In .cpp,</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// client setting</span>
+<span class="n">param_client_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">AsyncParametersClient</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;param_client&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="n">sub_param_event_</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">  </span><span class="n">param_client_</span><span class="o">-&gt;</span><span class="n">on_parameter_event</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">VelocityController</span><span class="o">::</span><span class="n">paramCallback</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_1</span><span class="p">));</span><span class="w"></span>
+
+<span class="c1">// callback setting</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">paramCallback</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">ParameterEvent</span><span class="o">::</span><span class="n">SharedPtr</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nl">new_parameter</span> <span class="p">:</span><span class="w"> </span><span class="n">event</span><span class="o">-&gt;</span><span class="n">new_parameters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">new_parameter</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nl">changed_parameter</span> <span class="p">:</span><span class="w"> </span><span class="n">event</span><span class="o">-&gt;</span><span class="n">changed_parameters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">changed_parameter</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nl">deleted_parameter</span> <span class="p">:</span><span class="w"> </span><span class="n">event</span><span class="o">-&gt;</span><span class="n">deleted_parameters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">deleted_parameter</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+<p>However, this method calls the callback for all parameter changes of all nodes. So the <code>add_on_set_parameters_callback</code> is recommended for the porting of the dynamic reconfigure.</p>
+<p>reference:</p>
+<ul>
+<li><a href="https://discourse.ros.org/t/composition-and-parameters-best-practice-suggestions/1001">https://discourse.ros.org/t/composition-and-parameters-best-practice-suggestions/1001</a></li>
+<li><a href="https://github.com/ros2/rclcpp/issues/243">https://github.com/ros2/rclcpp/issues/243</a></li>
+</ul>
+<h4 id="adjust-param-file">Adjust param file<a class="headerlink" href="#adjust-param-file" title="Permanent link">#</a></h4>
+<p>Two levels of hierarchy need to be added around the parameters themselves and each level has to be indented relative to its parent (by two spaces in this example):</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;node</span> <span class="err">name</span> <span class="err">or</span> <span class="err">/**</span><span class="nt">&gt;</span>:
+  ros__parameters:
+    <span class="nt">&lt;params&gt;</span>
+</code></pre></div>
+<h5 id="types">Types<a class="headerlink" href="#types" title="Permanent link">#</a></h5>
+<p>Also, ROS1 didn't have a problem when you specify an integer, e.g. <code>28</code> for a <code>double</code> parameter, but ROS2 does:</p>
+<div class="highlight"><pre><span></span><code><span class="o">[</span>vehicle_cmd_gate-1<span class="o">]</span> terminate called after throwing an instance of <span class="s1">&#39;rclcpp::exceptions::InvalidParameterTypeException&#39;</span>
+<span class="o">[</span>vehicle_cmd_gate-1<span class="o">]</span>   what<span class="o">()</span>:  parameter <span class="s1">&#39;vel_lim&#39;</span> has invalid type: expected <span class="o">[</span>double<span class="o">]</span> got <span class="o">[</span>integer<span class="o">]</span>
+</code></pre></div>
+<p>Best to just change <code>28</code> to <code>28.0</code> in the param file. See also <a href="https://github.com/ros2/rclcpp/issues/979">this issue</a>.</p>
+<h3 id="launch-file">Launch file<a class="headerlink" href="#launch-file" title="Permanent link">#</a></h3>
+<p>There is a <a href="https://index.ros.org/doc/ros2/Tutorials/Launch-files-migration-guide/">migration guide</a>. One thing it doesn't mention is that the <code>.launch</code> file also needs to be renamed to <code>.launch.xml</code>.</p>
+<h3 id="replacing-tf2_rosbuffer">Replacing <code>tf2_ros::Buffer</code><a class="headerlink" href="#replacing-tf2_rosbuffer" title="Permanent link">#</a></h3>
+<p>A <code>tf2_ros::Buffer</code> member that is filled by a <code>tf2_ros::TransformListener</code> can become a <code>tf2::BufferCore</code> in most cases. This reduces porting effort, since the a <code>tf2::BufferCore</code> can be constructed like a ROS1 <code>tf2_ros::Buffer</code>. For an example, see <a href="https://github.com/tier4/Pilot.Auto/pull/11">this PR</a>.</p>
+<p>However, in some cases the extra functionality of <code>tf2_ros::Buffer</code> is needed. For instance, waiting for a transform to arrive, usually in the form of <code>lookupTransform()</code> with a timeout argument.</p>
+<h4 id="avoiding-a-lookup-with-timeout">Avoiding a lookup with timeout<a class="headerlink" href="#avoiding-a-lookup-with-timeout" title="Permanent link">#</a></h4>
+<p>Often, code doesn't really need a transform lookup with timeout. For instance, <a href="https://github.com/tier4/Pilot.Auto/pull/80/files#diff-1fd60e4ec61c376d6b6b088a7878676408a5ac6a665977590610be92d5079e55L270-L277">this package</a> has a "main" subscription callback, <code>onTrigger()</code>, that waits for the most recent transform (<code>tf2::TimePointZero</code>), then checks if auxiliary data from other subscriptions is there and returns early from the callback if it isn't. In that case, I think the callback can simply treat transforms the same way as this auxiliary data, i.e. just do a simple <code>lookupTransform()</code> with no timeout and return early from the callback if it fails. The node won't do any work anyway until it's ready (i.e. has all the auxiliary data). Note that this pattern works only when the node is waiting for the most recent transform – if your callback wants to use the transform at a specific time, e.g. the timestamp of the message that triggered the callback, this pattern doesn't make sense. In that case, avoiding <code>waitForTransform()</code> requires refactoring the architecture of your system, but that topic is currently out of scope.</p>
+<p>It's worth keeping in mind that waiting for transforms in general can be troublesome – it is only a probabilistic solution that fails in a bad way for latency spikes, makes it hard to reason about the behavior of the whole system and probably incurs more latency than necessary.</p>
+<h4 id="when-you-cant-avoid-a-lookup-with-timeout">When you can't avoid a lookup with timeout<a class="headerlink" href="#when-you-cant-avoid-a-lookup-with-timeout" title="Permanent link">#</a></h4>
+<p>You should be able to use <code>tf2_ros::Buffer::lookupTransform()</code> with a timeout out of the box. There is one caveat, namely there has been at least one report of such an error:</p>
+<div class="highlight"><pre><span></span><code>Do not call canTransform or lookupTransform with a timeout unless you are using another thread for populating data.
+Without a dedicated thread it will always timeout.
+If you have a separate thread servicing tf messages, call setUsingDedicatedThread(true) on your Buffer instance.
+</code></pre></div>
+<p>There is also the drawback of spamming the console with warnings like</p>
+<div class="highlight"><pre><span></span><code>Warning: Invalid frame ID <span class="s2">&quot;a&quot;</span> passed to canTransform argument target_frame - frame does not exist
+          at line <span class="m">133</span> <span class="k">in</span> /tmp/binarydeb/ros-foxy-tf2-0.13.6/src/buffer_core.cpp
+</code></pre></div>
+<p>if the frame has never been sent before.</p>
+<h4 id="what-about-waitfortransform">What about <code>waitForTransform()</code>?<a class="headerlink" href="#what-about-waitfortransform" title="Permanent link">#</a></h4>
+<p>There is also a <a href="http://docs.ros2.org/foxy/api/tf2_ros/classtf2__ros_1_1Buffer.html#a832b188dd65cbec52cabc1ec07856e49"><code>waitForTransform</code> API</a> involving futures, but it has bugs and limitations. In particular:</p>
+<ul>
+<li>Its callback does not get called when the request can be answered immediately</li>
+<li>You can not call <code>get()</code> on the future and expect it to return the transform or throw an exception when the timeout ends. It continues waiting after the timeout expires if the future is not ready yet (i.e. the transform hasn't arrived).</li>
+</ul>
+<p>This limits you to the following style of calling the API, which doesn't use the callback and limits the waiting time before calling <code>get()</code> on the future:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// In the node definition</span>
+<span class="n">tf2_ros</span><span class="o">::</span><span class="n">Buffer</span><span class="w"> </span><span class="n">tf_buffer_</span><span class="p">;</span><span class="w"></span>
+<span class="n">tf2_ros</span><span class="o">::</span><span class="n">TransformListener</span><span class="w"> </span><span class="n">tf_listener_</span><span class="p">;</span><span class="w"></span>
+<span class="p">...</span><span class="w"></span>
+<span class="c1">// In the constructor</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">cti</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">tf2_ros</span><span class="o">::</span><span class="n">CreateTimerROS</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_node_base_interface</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_node_timers_interface</span><span class="p">());</span><span class="w"></span>
+<span class="n">tf_buffer_</span><span class="p">.</span><span class="n">setCreateTimerInterface</span><span class="p">(</span><span class="n">cti</span><span class="p">);</span><span class="w"></span>
+<span class="p">...</span><span class="w"></span>
+<span class="c1">// In the function processing data</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">tf_future</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tf_buffer_</span><span class="p">.</span><span class="n">waitForTransform</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">msg_time</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="p">[</span><span class="k">this</span><span class="p">](</span><span class="k">auto</span><span class="p">){});</span><span class="w"></span>
+<span class="k">auto</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tf_future</span><span class="p">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">timeout_</span><span class="p">);</span><span class="w"></span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">future_status</span><span class="o">::</span><span class="n">deferred</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// This never happened in experiments</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">future_status</span><span class="o">::</span><span class="n">timeout</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// The transform did not arrive within the timeout duration</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// The transform is here, and can now be accessed without triggering the waiting-infinitely bug</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">transform</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tf_future</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<p>The <code>waitForTransform()</code> function will return immediately. Note that the timeout passed to <code>waitForTransform()</code> does not matter, only the timeout passed to <code>wait_for()</code>.</p>
+<p>There is a bug with this when <code>tf2::TimeStampZero</code> is requested instead of a nonzero time: the status will be <code>ready</code>, but accessing the result with <code>get()</code> throws an exception. There is another bug where this bug is not triggered under some conditions, for extra fun. So do not use <code>waitForTransform()</code> with <code>tf2::TimeStampZero</code> (or any other way of saying "time 0"). The silver lining is that this can be often avoided anyway since it is the scenario described in the section before.</p>
+<p>For more details, see <a href="https://github.com/nnmm/tf2_example">https://github.com/nnmm/tf2_example</a> and the <a href="https://docs.google.com/spreadsheets/d/1BvFIMwp0kSkQecw2dkkyj4kR9edFLRDDBBTGynHBAN8/edit?usp=sharing">resulting table</a>.</p>
+<h3 id="shared-pointers">Shared pointers<a class="headerlink" href="#shared-pointers" title="Permanent link">#</a></h3>
+<p>Be careful in creating a <code>std::shared_ptr</code> to avoid a double-free situation when the constructor argument after porting is a dereferenced shared pointer. For example, if <code>msg</code> previously was a raw pointer and now is a shared pointer, the following would lead to both <code>msg</code> and <code>a</code> deleting the same resource.</p>
+<div class="highlight"><pre><span></span><code><span class="k">auto</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">autoware_planning_msgs</span><span class="o">::</span><span class="n">Trajectory</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="n">msg</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>To avoid this, just copy the shared pointer</p>
+<div class="highlight"><pre><span></span><code><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">autoware_planning_msgs</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">Trajectory</span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">msg</span><span class="p">;</span><span class="w"></span>
+</code></pre></div>
+<h3 id="service-clients">Service clients<a class="headerlink" href="#service-clients" title="Permanent link">#</a></h3>
+<p>There is no synchronous API for service calls, and the futures API can not be used from inside a node, only the callback API.</p>
+<p>The futures API is what is used in tutorials such as <a href="https://index.ros.org/doc/ros2/Tutorials/Writing-A-Simple-Cpp-Service-And-Client/#write-the-client-node">Writing a simple service and client</a>, but note that the call to <code>rclcpp::spin_until_future_complete()</code> does not happen from inside any subscriber callback or similar. If you do call it from inside a node, you will get</p>
+<div class="highlight"><pre><span></span><code>    terminate called after throwing an instance of <span class="s1">&#39;std::runtime_error&#39;</span>
+      what<span class="o">()</span>:  Node has already been added to an executor.
+</code></pre></div>
+<p>The node itself is already added to the executor in <code>rclcpp::spin()</code> function inside the main function, and <code>rclcpp::spin_until_future_complete()</code> tries to add the node to another executor.</p>
+<p>You might note that the function already returned a <code>std::shared_future</code> on which you could wait. But that just hangs forever.</p>
+<p>So you're left with using a <a href="http://docs.ros2.org/foxy/api/rclcpp/classrclcpp_1_1Client.html#a62e48edd618bcb73538bfdc3ee3d5e63">callback</a>. Unfortunately that leaves you with no option to handle failure: For instance, if the service dies, your callback will never get called. There's no easy way to say that you only want to wait for 2 seconds for a result.</p>
+<p>Another idea for a workaround is to do something similar to what is done in the <code>rclcpp::spin_until_future_complete()</code> function by ourselves. Another possible avenue is using multithreaded executors, see <a href="https://answers.ros.org/question/343279/ros2-how-to-implement-a-sync-service-client-in-a-node/">this post</a> for some more detail.</p>
+<h3 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">#</a></h3>
+<p>The node name is now automatically prepended to the log message, so that part can be removed. In methods, get the logger from the node with <code>get_logger()</code>. In a free function <code>foo()</code>, use <code>rclcpp::get_logger("foo")</code>. To provide a further level of hierarchy, use <code>get_logger("foo").get_child("bar")</code>.</p>
+<p>For example,</p>
+<div class="highlight"><pre><span></span><code><span class="n">ROS_INFO_COND</span><span class="p">(</span><span class="n">show_debug_info_</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[MPC] some message with a float value %g&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">some_member_</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>should become</p>
+<div class="highlight"><pre><span></span><code><span class="n">RCLCPP_INFO_EXPRESSION</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="n">show_debug_info_</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;some message with a float value %g&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">some_member_</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>The mapping of logger macros is basically just</p>
+<div class="highlight"><pre><span></span><code><span class="gd">-ROS_INFO(...)</span>
+<span class="gi">+RCLCPP_INFO(get_logger(), ...)</span>
+</code></pre></div>
+<p>with the exception of</p>
+<div class="highlight"><pre><span></span><code><span class="gd">-ROS_INFO_COND(cond, ...)</span>
+<span class="gi">+RCLCPP_INFO_EXPRESSION(logger, cond, ...)</span>
+
+<span class="gd">-ROS_WARN_DELAYED_THROTTLE(duration, ...)</span>
+<span class="gi">+RCLCPP_WARN_SKIPFIRST_THROTTLE(get_logger(), *get_clock(), duration, ...)</span>
+</code></pre></div>
+<p>where the <code>duration</code> is an integer interpreted as milliseconds as opposed to seconds in ROS1. A readable way to document that is</p>
+<div class="highlight"><pre><span></span><code><span class="n">RCLCPP_WARN_SKIPFIRST_THROTTLE</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="o">*</span><span class="n">get_clock</span><span class="p">(),</span><span class="w"> </span><span class="mi">5000</span><span class="w"> </span><span class="cm">/* ms */</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span><span class="w"></span>
+</code></pre></div>
+<h3 id="shutting-down-a-subscriber">Shutting down a subscriber<a class="headerlink" href="#shutting-down-a-subscriber" title="Permanent link">#</a></h3>
+<p>The <code>shutdown()</code> method doesn't exist anymore, but you can just throw away the subscriber with <code>this-&gt;subscription_ = nullptr;</code> or similar, for instance inside the subscription callback. Curiously, this works even though the <code>subscription_</code> member variable is not the sole owner – the <code>use_count</code> is 3 in the <code>minimal_subscriber</code> example.</p>
+<h3 id="durations">Durations<a class="headerlink" href="#durations" title="Permanent link">#</a></h3>
+<p>Beware of just replacing <code>ros::Duration</code> with <code>rclcpp::Duration</code> – it compiles, but now expects nanoseconds instead of seconds. Use <code>rclcpp::Duration::from_seconds</code> instead.</p>
+<h2 id="alternative-semi-automated-porting-with-ros2-migration-tools-not-working">Alternative: Semi-automated porting with ros2-migration-tools (not working)<a class="headerlink" href="#alternative-semi-automated-porting-with-ros2-migration-tools-not-working" title="Permanent link">#</a></h2>
+<p><strong>The following instructions to use <code>ros2-migration-tools</code> are given for completeness, we gave up and decided to port packages manually.</strong></p>
+<p>From <a href="https://github.com/awslabs/ros2-migration-tools">https://github.com/awslabs/ros2-migration-tools</a>:</p>
+<div class="highlight"><pre><span></span><code>pip3 install parse_cmake
+git clone https://github.com/awslabs/ros2-migration-tools.git
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+tar xaf clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+cp -r clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04/lib/libclang.so ros2-migration-tools/clang/
+cp -r clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04/lib/libclang.so.10 ros2-migration-tools/clang/
+cp -r clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04/include/ ros2-migration-tools/clang/clang
+</code></pre></div>
+<p>The package needs to be <strong>built with ROS1</strong>. I followed <a href="http://wiki.ros.org/noetic/Installation/Ubuntu">http://wiki.ros.org/noetic/Installation/Ubuntu</a> outside of ADE</p>
+<div class="highlight"><pre><span></span><code>sudo sh -c <span class="s1">&#39;echo &quot;deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main&quot; &gt; /etc/apt/sources.list.d/ros-latest.list&#39;</span>
+sudo apt-key adv --keyserver <span class="s1">&#39;hkp://keyserver.ubuntu.com:80&#39;</span> --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+sudo apt update
+sudo apt install ros-melodic-ros-base
+</code></pre></div>
+<p>In <a href="https://github.com/awslabs/ros2-migration-tools#setup-the-ros1-packages">https://github.com/awslabs/ros2-migration-tools#setup-the-ros1-packages</a>, it instructs me to compile a ros1 package with colcon to get started.</p>
+<div class="highlight"><pre><span></span><code>colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS<span class="o">=</span>ON
+</code></pre></div>
+<p>And that fails. I thought <code>colcon</code> is only for ROS2 so it should only work after porting, not before. I retried with <code>catkin_make</code> but also ran into issues there</p>
+<div class="highlight"><pre><span></span><code>frederik.beaujean@frederik-beaujean-01:~/ade-home/AutowareArchitectureProposal$ catkin_make --source src/autoware/autoware.iv/control/shift_decider/ -DCMAKE_EXPORT_COMPILE_COMMANDS<span class="o">=</span>ON
+Base path: /home/frederik.beaujean/ade-home/AutowareArchitectureProposal
+Source space: /home/frederik.beaujean/ade-home/AutowareArchitectureProposal/src/autoware/autoware.iv/control/shift_decider
+Build space: /home/frederik.beaujean/ade-home/AutowareArchitectureProposal/build
+Devel space: /home/frederik.beaujean/ade-home/AutowareArchitectureProposal/devel
+Install space: /home/frederik.beaujean/ade-home/AutowareArchitectureProposal/install
+<span class="c1">####</span>
+<span class="c1">#### Running command: &quot;cmake /home/frederik.beaujean/ade-home/AutowareArchitectureProposal/src/autoware/autoware.iv/control/shift_decider -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCATKIN_DEVEL_PREFIX=/home/frederik.beaujean/ade-home/AutowareArchitectureProposal/devel -DCMAKE_INSTALL_PREFIX=/home/frederik.beaujean/ade-home/AutowareArchitectureProposal/install -G Unix Makefiles&quot; in &quot;/home/frederik.beaujean/ade-home/AutowareArchitectureProposal/build&quot;</span>
+<span class="c1">####</span>
+CMake Error: The <span class="nb">source</span> <span class="s2">&quot;/home/frederik.beaujean/ade-home/AutowareArchitectureProposal/src/autoware/autoware.iv/control/shift_decider/CMakeLists.txt&quot;</span> does not match the <span class="nb">source</span> <span class="s2">&quot;/home/frederik.beaujean/ade-home/AutowareArchitectureProposal/src/CMakeLists.txt&quot;</span> used to generate cache.  Re-run cmake with a different <span class="nb">source</span> directory.
+Invoking <span class="s2">&quot;cmake&quot;</span> failed
+</code></pre></div>
+<p>According to an expert:</p>
+<blockquote>
+<p>You should be able to compile it with colcon, cause it works for both ROS 1 and ROS 2 code. You are getting the same error with catkin so it's probably something related to ROS 1 and the build instructions.</p>
+</blockquote>
+<h2 id="strange-errors-and-their-causes">Strange errors and their causes<a class="headerlink" href="#strange-errors-and-their-causes" title="Permanent link">#</a></h2>
+<p>Some error messages are so unhelpful that it might help to collect them and their causes.</p>
+<h3 id="packagexml-errors">package.xml errors<a class="headerlink" href="#packagexml-errors" title="Permanent link">#</a></h3>
+<p>If you forget <code>&lt;build_type&gt;ament_cmake&lt;/build_type&gt;</code>, or you use package format 2 in combination with a package format 3 tag like <code>&lt;member_of_group&gt;</code>, you'll get the unhelpful error</p>
+<div class="highlight"><pre><span></span><code>CMake Error at /usr/share/cmake-3.16/Modules/FindPackageHandleStandardArgs.cmake:146 <span class="o">(</span>message<span class="o">)</span>:
+  Could NOT find FastRTPS <span class="o">(</span>missing: FastRTPS_INCLUDE_DIR FastRTPS_LIBRARIES<span class="o">)</span>
+</code></pre></div>
+<h3 id="yaml-param-file">YAML param file<a class="headerlink" href="#yaml-param-file" title="Permanent link">#</a></h3>
+<h4 id="tabs-instead-of-spaces">Tabs instead of spaces<a class="headerlink" href="#tabs-instead-of-spaces" title="Permanent link">#</a></h4>
+<p>Used tabs instead of spaces in your param.yaml file? <em>Clearly</em>, the most user-friendly error message is</p>
+<div class="highlight"><pre><span></span><code>$ ros2 launch mypackage mypackage.launch.xml
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>launch<span class="o">]</span>: All log files can be found below /home/user/.ros/log/2020-10-19-19-09-13-676799-t4-30425
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>launch<span class="o">]</span>: Default logging verbosity is <span class="nb">set</span> to INFO
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>mypackage-1<span class="o">]</span>: process started with pid <span class="o">[</span><span class="m">30427</span><span class="o">]</span>
+<span class="o">[</span>mypackage-1<span class="o">]</span> <span class="o">[</span>ERROR<span class="o">]</span> <span class="o">[</span><span class="m">1603127353</span>.755503075<span class="o">]</span> <span class="o">[</span>rcl<span class="o">]</span>: Failed to parse global arguments
+<span class="o">[</span>mypackage-1<span class="o">]</span>
+<span class="o">[</span>mypackage-1<span class="o">]</span> &gt;&gt;&gt; <span class="o">[</span>rcutils<span class="p">|</span>error_handling.c:108<span class="o">]</span> rcutils_set_error_state<span class="o">()</span>
+<span class="o">[</span>mypackage-1<span class="o">]</span> This error state is being overwritten:
+<span class="o">[</span>mypackage-1<span class="o">]</span>
+<span class="o">[</span>mypackage-1<span class="o">]</span>   <span class="s1">&#39;Couldn&#39;</span>t parse params file: <span class="s1">&#39;--params-file /home/user/workspace/install/mypackage/share/mypackage/param/myparameters.yaml&#39;</span>. Error: Error parsing a event near line <span class="m">1</span>, at /tmp/binarydeb/ros-foxy-rcl-yaml-param-parser-1.1.8/src/parse.c:599, at /tmp/binarydeb/ros-foxy-rcl-1.1.8/src/rcl/arguments.c:391<span class="s1">&#39;</span>
+<span class="s1">[mypackage-1]</span>
+<span class="s1">[mypackage-1] with this new error message:</span>
+<span class="s1">[mypackage-1]</span>
+<span class="s1">[mypackage-1]   &#39;</span>context is zero-initialized, at /tmp/binarydeb/ros-foxy-rcl-1.1.8/src/rcl/context.c:51<span class="s1">&#39;</span>
+<span class="s1">[mypackage-1]</span>
+<span class="s1">[mypackage-1] rcutils_reset_error() should be called after error handling to avoid this.</span>
+<span class="s1">[mypackage-1] &lt;&lt;&lt;</span>
+<span class="s1">[mypackage-1] [ERROR] [1603127353.755523149] [rclcpp]: failed to finalize context: context is zero-initialized, at /tmp/binarydeb/ros-foxy-rcl-1.1.8/src/rcl/context.c:51</span>
+<span class="s1">[mypackage-1] terminate called after throwing an instance of &#39;</span>rclcpp::exceptions::RCLInvalidROSArgsError<span class="s1">&#39;</span>
+<span class="s1">[mypackage-1]   what():  failed to initialize rcl: error not set</span>
+<span class="s1">[ERROR] [mypackage-1]: process has died [pid 30427, exit code -6, cmd &#39;</span>/home/user/workspace/install/mypackage/lib/mypackage/mypackage --ros-args -r __node:<span class="o">=</span>mypackage --params-file /home/user/workspace/install/mypackage/share/mypackage/param/myparameters.yaml<span class="err">&#39;</span><span class="o">]</span>.
+</code></pre></div>
+<p>and that is indeed what ROS2 will tell you.</p>
+<h4 id="no-indentation">No indentation<a class="headerlink" href="#no-indentation" title="Permanent link">#</a></h4>
+<p>Without proper indentation of levels, there is a segfault when the YAML is parsed during <code>rclcpp::init(argc, argv)</code>. The error is similar to the above but begins with</p>
+<div class="highlight"><pre><span></span><code><span class="o">[</span>mpc_follower-1<span class="o">]</span> free<span class="o">()</span>: double free detected <span class="k">in</span> tcache <span class="m">2</span>
+</code></pre></div>
+<p>Note that this message may be hidden when just launching with <code>ros2 launch</code>. It is shown running the node under <code>valgrind</code> which requires a <code>launch-prefix</code>. For example, modify <code>mpc_follower.launch.xml</code></p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;node</span> <span class="na">pkg=</span><span class="s">&quot;mpc_follower&quot;</span> <span class="na">exec=</span><span class="s">&quot;mpc_follower&quot;</span> <span class="na">name=</span><span class="s">&quot;mpc_follower&quot;</span> <span class="na">output=</span><span class="s">&quot;screen&quot;</span> <span class="na">launch-prefix=</span><span class="s">&quot;valgrind&quot;</span><span class="nt">&gt;</span>
+</code></pre></div>
+<p>Another helpful option for diagnosing segfaults is to run under <code>gdb</code> to get a backtrace. Change the prefix</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;node</span> <span class="na">pkg=</span><span class="s">&quot;mpc_follower&quot;</span> <span class="na">exec=</span><span class="s">&quot;mpc_follower&quot;</span> <span class="na">name=</span><span class="s">&quot;mpc_follower&quot;</span> <span class="na">output=</span><span class="s">&quot;screen&quot;</span> <span class="na">launch-prefix=</span><span class="s">&quot;xterm -e gdb -ex run --args&quot;</span><span class="nt">&gt;</span>
+</code></pre></div>
+<p>and after the segfault occurred, you can enter <code>bt</code> in the <code>xterm</code> window.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../../ClangTidyGuideline/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Clang-Tidy guideline" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Clang-Tidy guideline
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../../../Credits/" class="md-footer__link md-footer__link--next" aria-label="Next: Credits" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Credits
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2021 Tier IV, Inc.
+          </div>
+        
+        
+          Made with
+          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+            Material for MkDocs
+          </a>
+        
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.b1047164.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      
+    
+  </body>
+</html>

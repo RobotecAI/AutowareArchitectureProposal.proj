@@ -1,0 +1,2393 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="canonical" href="https://tier4.github.io/autoware.proj/design/software_architecture/Perception/Perception/">
+      
+      <link rel="icon" href="../../../../images/tier4.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
+    
+    
+      
+        <title>Overall - Autoware Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.a57b2b03.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    
+      <link rel="stylesheet" href="../../../../css/tier4_color.css">
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#perception" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Autoware Documentation" class="md-header__button md-logo" aria-label="Autoware Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Autoware Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Overall
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/tier4/autoware.proj/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Autoware Documentation" class="md-nav__button md-logo" aria-label="Autoware Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Autoware Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/tier4/autoware.proj/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tutorial/Requirements/" class="md-nav__link">
+        Requirements
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tutorial/HowToInstall/" class="md-nav__link">
+        How to install
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3" type="checkbox" id="__nav_2_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_3">
+          How to run
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="How to run" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          How to run
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tutorial/QuickStart/" class="md-nav__link">
+        Quick start
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tutorial/SimulationTutorial/" class="md-nav__link">
+        Simulation
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Design
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Design" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Design
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          API
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="API" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          API
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../apis/ja/concept/" class="md-nav__link">
+        Concept
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../apis/ja/list/" class="md-nav__link">
+        List
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1_3" type="checkbox" id="__nav_3_1_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1_3">
+          Proposal
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Proposal" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_1_3">
+          <span class="md-nav__icon md-icon"></span>
+          Proposal
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../apis/ja/state/" class="md-nav__link">
+        State
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2">
+          Architecture
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Architecture" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Architecture
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Sensing/Sensing/" class="md-nav__link">
+        Sensing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_3" type="checkbox" id="__nav_3_2_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_3">
+          Localization
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Localization" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          Localization
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Localization/Localization/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Localization/PoseEstimator/PoseEstimator/" class="md-nav__link">
+        Pose estimator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Localization/TwistEstimator/TwistEstimator/" class="md-nav__link">
+        Twist estimator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Localization/PoseTwistFusionFilter/PoseTwistFusionFilter/" class="md-nav__link">
+        Pose twist fusion filter
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_4" type="checkbox" id="__nav_3_2_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_4">
+          Perception
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Perception" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_4">
+          <span class="md-nav__icon md-icon"></span>
+          Perception
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Overall
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Overall
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#role" class="md-nav__link">
+    Role
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    Use Cases
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input" class="md-nav__link">
+    Input
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    Output
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design" class="md-nav__link">
+    Design
+  </a>
+  
+    <nav class="md-nav" aria-label="Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-points-of-the-structure" class="md-nav__link">
+    Key points of the structure
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-recognition" class="md-nav__link">
+    Object Recognition
+  </a>
+  
+    <nav class="md-nav" aria-label="Object Recognition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role_1" class="md-nav__link">
+    Role
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement" class="md-nav__link">
+    Requirement
+  </a>
+  
+    <nav class="md-nav" aria-label="Requirement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    Detection
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tracking" class="md-nav__link">
+    Tracking
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prediction" class="md-nav__link">
+    Prediction
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input_1" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav" aria-label="Input">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lidar" class="md-nav__link">
+    LiDAR
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camera-optional" class="md-nav__link">
+    Camera (optional)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map" class="md-nav__link">
+    Map
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output_1" class="md-nav__link">
+    Output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#traffic-light-recognition" class="md-nav__link">
+    Traffic light recognition
+  </a>
+  
+    <nav class="md-nav" aria-label="Traffic light recognition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement_1" class="md-nav__link">
+    Requirement
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input_2" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav" aria-label="Input">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#camera" class="md-nav__link">
+    Camera
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map_1" class="md-nav__link">
+    Map
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drive-route-optional" class="md-nav__link">
+    Drive Route (optional)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output_2" class="md-nav__link">
+    Output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_4_2" type="checkbox" id="__nav_3_2_4_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_4_2">
+          Object recognition
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Object recognition" data-md-level="4">
+        <label class="md-nav__title" for="__nav_3_2_4_2">
+          <span class="md-nav__icon md-icon"></span>
+          Object recognition
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ObjectRecognition/Detection/Detection/" class="md-nav__link">
+        Detection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ObjectRecognition/Tracking/Tracking/" class="md-nav__link">
+        Tracking
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ObjectRecognition/Prediction/Prediction/" class="md-nav__link">
+        Prediction
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_4_3" type="checkbox" id="__nav_3_2_4_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_4_3">
+          Traffic light recognition
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Traffic light recognition" data-md-level="4">
+        <label class="md-nav__title" for="__nav_3_2_4_3">
+          <span class="md-nav__icon md-icon"></span>
+          Traffic light recognition
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TrafficLightRecognition/Detection/Detection/" class="md-nav__link">
+        Detection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TrafficLightRecognition/Classification/Classification/" class="md-nav__link">
+        Classification
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_5" type="checkbox" id="__nav_3_2_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_5">
+          Planning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Planning" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_5">
+          <span class="md-nav__icon md-icon"></span>
+          Planning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Planning/Planning/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Planning/ScenarioSelector/ScenarioSelector/" class="md-nav__link">
+        Scenario selector
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_5_3" type="checkbox" id="__nav_3_2_5_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_5_3">
+          Lane driving Scenario
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Lane driving Scenario" data-md-level="4">
+        <label class="md-nav__title" for="__nav_3_2_5_3">
+          <span class="md-nav__icon md-icon"></span>
+          Lane driving Scenario
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Planning/LaneDriving/LaneDrivingScenario/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Planning/LaneDriving/Behavior/LaneChangePlanner/" class="md-nav__link">
+        Behavior path planning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Planning/LaneDriving/Behavior/BehaviorVelocityPlanner/" class="md-nav__link">
+        Behavior velocity planning
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Planning/Parking/ParkingScenario/" class="md-nav__link">
+        Parking
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Planning/DesignRationale/" class="md-nav__link">
+        Design rationale
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_6" type="checkbox" id="__nav_3_2_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_6">
+          Control
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Control" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_6">
+          <span class="md-nav__icon md-icon"></span>
+          Control
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Control/Control/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_6_2" type="checkbox" id="__nav_3_2_6_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_6_2">
+          Trajectory follower
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Trajectory follower" data-md-level="4">
+        <label class="md-nav__title" for="__nav_3_2_6_2">
+          <span class="md-nav__icon md-icon"></span>
+          Trajectory follower
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Control/TrajectoryFollower/LateralController/" class="md-nav__link">
+        Lateral controller
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Control/TrajectoryFollower/LongitudinalController/" class="md-nav__link">
+        Longitudinal controller
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Control/TrajectoryFollower/LatLonCoupler/" class="md-nav__link">
+        Lateral longitudinal coupler
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Control/VehicleCmdGate/VehicleCmdGate/" class="md-nav__link">
+        Vehicle cmd gate
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Vehicle/Vehicle/" class="md-nav__link">
+        Vehicle
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Map/Map/" class="md-nav__link">
+        Map
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TF/" class="md-nav__link">
+        TF
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../NamingConvention/" class="md-nav__link">
+        Naming convention
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ForDevelopers/" class="md-nav__link">
+        For developers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../NodeDiagram/" class="md-nav__link">
+        Node diagram
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../repository/Repository/" class="md-nav__link">
+        Repository
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../release/Release/" class="md-nav__link">
+        Release
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          DeveloperGuide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="DeveloperGuide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          DeveloperGuide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developer_guide/CodingGuideline/" class="md-nav__link">
+        Coding guideline
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developer_guide/PullRequestGuideline/" class="md-nav__link">
+        Pull request guideline
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developer_guide/UnitTestGuideline/" class="md-nav__link">
+        Unit test guideline
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developer_guide/ClangTidyGuideline/" class="md-nav__link">
+        Clang-Tidy guideline
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5">
+          Knowhow
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Knowhow" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_5">
+          <span class="md-nav__icon md-icon"></span>
+          Knowhow
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developer_guide/knowhow/PortingToROS2/" class="md-nav__link">
+        Porting ROS1 code to ROS2
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          License/Credit
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="License/Credit" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          License/Credit
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../Credits/" class="md-nav__link">
+        Credits
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../License/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#role" class="md-nav__link">
+    Role
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    Use Cases
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input" class="md-nav__link">
+    Input
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    Output
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design" class="md-nav__link">
+    Design
+  </a>
+  
+    <nav class="md-nav" aria-label="Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-points-of-the-structure" class="md-nav__link">
+    Key points of the structure
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-recognition" class="md-nav__link">
+    Object Recognition
+  </a>
+  
+    <nav class="md-nav" aria-label="Object Recognition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role_1" class="md-nav__link">
+    Role
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement" class="md-nav__link">
+    Requirement
+  </a>
+  
+    <nav class="md-nav" aria-label="Requirement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    Detection
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tracking" class="md-nav__link">
+    Tracking
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prediction" class="md-nav__link">
+    Prediction
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input_1" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav" aria-label="Input">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lidar" class="md-nav__link">
+    LiDAR
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camera-optional" class="md-nav__link">
+    Camera (optional)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map" class="md-nav__link">
+    Map
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output_1" class="md-nav__link">
+    Output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#traffic-light-recognition" class="md-nav__link">
+    Traffic light recognition
+  </a>
+  
+    <nav class="md-nav" aria-label="Traffic light recognition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement_1" class="md-nav__link">
+    Requirement
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input_2" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav" aria-label="Input">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#camera" class="md-nav__link">
+    Camera
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map_1" class="md-nav__link">
+    Map
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drive-route-optional" class="md-nav__link">
+    Drive Route (optional)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output_2" class="md-nav__link">
+    Output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/tier4/autoware.proj/edit/main/docs/design/software_architecture/Perception/Perception.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="perception">Perception<a class="headerlink" href="#perception" title="Permanent link">#</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">#</a></h2>
+<p>Perception stack recognizes the surrounding of the vehicle to achieve safe and efficient autonomous driving. The output of Sensing describes environment "as is", and is usually too primitive to be used directly for high-level planning. Perception stack will extract key and organize it into more meaningful data for Planning stack.</p>
+<p><img alt="Perception_overview" src="../image/PerceptionOverview.svg" /></p>
+<h2 id="role">Role<a class="headerlink" href="#role" title="Permanent link">#</a></h2>
+<p>Perception stack has 2 main roles.</p>
+<ul>
+<li><strong>Object Recognition</strong></li>
+<li><strong>Traffic Light Recognition</strong></li>
+</ul>
+<h2 id="use-cases">Use Cases<a class="headerlink" href="#use-cases" title="Permanent link">#</a></h2>
+<p>Perception must provide enough information to support following use cases:</p>
+<table>
+<thead>
+<tr>
+<th>Use case</th>
+<th>Required output from <code>Perception</code></th>
+<th>How the output is used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Changing lane</td>
+<td><strong>Object Recognition-Prediction</strong>:<br>- Predicted paths of objects on target lane</td>
+<td>To decide <code>when</code> and <code>where</code> changing lane depending on objects' predicted paths. <br><code>when</code>: which timing to trigger lane change depending on obstacles position and velocity. <br> <code>where</code>: where to go depending on objects' position and shape.</td>
+</tr>
+<tr>
+<td>2. Turning at intersection</td>
+<td><strong>Object Recognition- Prediction</strong>:<br>- Predicted paths of objects at an intersection</td>
+<td>To decide <code>when</code> turning at an intersection depending on objects' predicted path. <br><code>when</code>: which timing to turning depending on objects' future paths.</td>
+</tr>
+<tr>
+<td>3. Avoiding parked vehicles</td>
+<td><strong>Object Recognition- Detection</strong>:<br>- Objects' class, shape and, position <br> <strong>Object Recognition- Tracking</strong>:<br>- Objects' velocity</td>
+<td>To decide <code>where</code> to avoid objects depending on objects' properties. <br> <code>where</code>: where to avoid objects in given area depending on objects' class, velocity, shape and position.</td>
+</tr>
+<tr>
+<td>4. Stopping at a crosswalk when pedestrians are walking</td>
+<td><strong>Object Recognition- Prediction</strong>:<br>- Predicted paths of objects at a crosswalk</td>
+<td>To decide where stopping based on pedestrians' position and velocity.</td>
+</tr>
+<tr>
+<td>5. Passing intersection without traffic lights</td>
+<td><strong>Object Recognition- Detection</strong>:<br>- Objects' shape. <br> <strong>Object Recognition- Prediction</strong>:<br>- Predicted paths of objects at an intersection</td>
+<td>To decide <code>when</code> passing intersection depending on objects' properties. <br><code>when</code>: which timing to pass intersection while negotiating with other objects based on objects' properties like, predicted paths and shape.</td>
+</tr>
+<tr>
+<td>Merging into another lane</td>
+<td><strong>Object Recognition- Prediction</strong>:<br>- Predicted paths of objects at merging area</td>
+<td>To decide when merging into another lane depending objects' predicted paths.</td>
+</tr>
+<tr>
+<td>6. Taking over Pedestrian/Cyclists</td>
+<td><strong>Object Recognition- Detection</strong>:<br>- Objects' shape, position and orientation. <br> <strong>Object Recognition- Tracking</strong>:<br>- Objects' velocity</td>
+<td>To decide <code>when</code> and <code>where</code> taking over depending on objects' predicted paths <br> <code>when</code>: which timing to taking over depending on obstacles position and velocity. <br> <code>where</code>: where to go depending on objects' position and shape.</td>
+</tr>
+<tr>
+<td>7. Stopping/yielding to an obstacle</td>
+<td><strong>Object Recognition- Detection</strong>:<br>- Objects' shape, position, and orientation <br> <strong>Object Recognition- Tracking</strong>:<br>- Objects' velocity</td>
+<td>To decide where to stop/yield based on pedestrians' position and velocity.</td>
+</tr>
+<tr>
+<td>8. Passing intersection with traffic lights</td>
+<td><strong>Traffic Light Recognition- Classification</strong>:<br>- Traffic signal status</td>
+<td>To decide whether to go or stop based on traffic signal status.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">#</a></h2>
+<p>From above table, high-level requirements of Perception stack are summarized as below:</p>
+<ol>
+<li>Perception stack should recognize following objects: (Use Case 3, 5, 6)<ol>
+<li>vehicle</li>
+<li>pedestrian</li>
+<li>cyclists</li>
+<li>other objects that is on road or parking lot</li>
+</ol>
+</li>
+<li>For each object, Perception stack should provide following information: (Use Case 1-7)<ol>
+<li>Pose (done in ObjectDetection)</li>
+<li>Shape (done in ObjectDetection)</li>
+<li>Predicted future path (done in Object Tracking+Prediction)</li>
+</ol>
+</li>
+<li>Perception stack should provide traffic light information: (Use Case <span class="emoji"><span class="emoji"><span class="emoji">😎</span></span></span><ol>
+<li>The status of traffic light</li>
+<li>Unique id of traffic light from map</li>
+</ol>
+</li>
+</ol>
+<h2 id="input">Input<a class="headerlink" href="#input" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Topic (Data Type)</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LiDAR</td>
+<td><code>/sensing/lidar/pointcloud</code><br>(<code>sensor_msgs::PointCloud2</code>)</td>
+<td>Pointcloud data captured by LiDAR comes from Sensing stack. Perception stack is allowed to choose subscribing to pointcloud with/without background depending on algorithms.</td>
+</tr>
+<tr>
+<td>Camera</td>
+<td><code>/sensing/{camera_name}/image</code><br>(<code>sensor_msgs::Image</code>)</td>
+<td>Image data captured by Camera comes from Sensing stack. CameraInfo contains intrinsic parameters for the image.</td>
+</tr>
+<tr>
+<td>Map</td>
+<td><code>/map/vector_map</code><br>(<code>autoware_lanelet2_msgs::MapBin</code>)</td>
+<td>This is Map data in lanelet2 format. Map stack has utility packages for processing map data.</td>
+</tr>
+<tr>
+<td>Drive Route (optional)</td>
+<td><code>/planning/route</code><br>(<code>autoware_planning_msgs::Route</code>)</td>
+<td>This is route information for reaching a destination. In Perception stack, it is used for detecting the traffic lights associated with route information.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="output">Output<a class="headerlink" href="#output" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Topic Name (Data Type)</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dynamic Object</td>
+<td><code>/perception/object_recognition/objects</code><br>(<code>autoware_perception_msgs::DynamicObjectArray</code>)</td>
+<td>This includes obstacles' information. An obstacle is described by 3 major properties; State, Shape, Semantic. Detail design for these properties is in below Object Recognition section.</td>
+</tr>
+<tr>
+<td>Traffic Light State</td>
+<td><code>/perception/traffic_light_recognition/traffic_light_states</code><br>(<code>autoware_perception_msgs::TrafficLightStateArray</code>)</td>
+<td>This includes the status of traffic light signals in array format.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="design">Design<a class="headerlink" href="#design" title="Permanent link">#</a></h2>
+<p>This Perception stack consists of 2 separated modules and each module can be subdivided into following components:</p>
+<ul>
+<li>Object Recognition (satisfies Requirement 1 and 2)<ul>
+<li>Detection</li>
+<li>Tracking</li>
+<li>Prediction</li>
+</ul>
+</li>
+<li>Traffic Light Recognition (satisfies requirement 3)<ul>
+<li>Detection</li>
+<li>Classification</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Perception_component" src="../image/PerceptionComponent.png" /></p>
+<h3 id="key-points-of-the-structure">Key points of the structure<a class="headerlink" href="#key-points-of-the-structure" title="Permanent link">#</a></h3>
+<ul>
+<li>Interfaces are separated according to the current algorithm level.</li>
+<li>Enable complex autonomous driving use cases by including information like objects' future movement.</li>
+<li>Depends on technology development in the future, this structure might be changed (e.g. E2E).</li>
+</ul>
+<h2 id="object-recognition">Object Recognition<a class="headerlink" href="#object-recognition" title="Permanent link">#</a></h2>
+<h3 id="role_1">Role<a class="headerlink" href="#role_1" title="Permanent link">#</a></h3>
+<p>Recognize obstacles that could potentially move. Provide detail information for obstacles required in the Planning stack.</p>
+<p>The motivation behind recognizing obstacles comes from a requirement for balancing safety and efficiency in autonomous driving. If emphasizing safety too much, it needs to consider every possible movement of obstacles. Autonomous vehicles could end up freezing. If emphasizing efficiency too much, recognize every object as static obstacles. A car could hit a pedestrian in an intersection because of the efficient drive to a destination. Balanced autonomous driving is achieved by recognizing obstacles.</p>
+<h3 id="requirement">Requirement<a class="headerlink" href="#requirement" title="Permanent link">#</a></h3>
+<p><img alt="Perception_object_if" src="../image/PerceptionObjectIf.png" /></p>
+<h4 id="detection">Detection<a class="headerlink" href="#detection" title="Permanent link">#</a></h4>
+<p>Detection component detects objects from sensor data.</p>
+<p>Detection component is responsible for clarifying the following objects' property.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Definition</th>
+<th>Data Type</th>
+<th>Parent Data Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td>Class information</td>
+<td><code>uint8</code></td>
+<td><code>autoware_perception_msgs::Semantic</code></td>
+</tr>
+<tr>
+<td>confidence</td>
+<td>Class's confidence 0.0~1.0.</td>
+<td><code>float64</code></td>
+<td><code>autoware_perception_msgs::Semantic</code></td>
+</tr>
+<tr>
+<td>pose</td>
+<td>Position and orientation</td>
+<td><code>geometry_msgs::PoseWithCovariance</code></td>
+<td><code>autoware_perception_msgs::State</code></td>
+</tr>
+<tr>
+<td>orientation_reliable</td>
+<td>Boolean for stable orientation or not</td>
+<td><code>bool</code></td>
+<td><code>autoware_perception_msgs::State</code></td>
+</tr>
+<tr>
+<td>shape</td>
+<td>Shape in 3D bounding box, cylinder or polygon</td>
+<td><code>autoware_perception_msgs::Shape</code></td>
+<td><code>autoware_perception_msgs::DynamicObject</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="tracking">Tracking<a class="headerlink" href="#tracking" title="Permanent link">#</a></h4>
+<p>Tracking component deals with time-series processing.</p>
+<p>Tracking component is responsible for clarifying the following objects' property.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Definition</th>
+<th>Data Type</th>
+<th>Parent Data Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>Unique object id over frames</td>
+<td><code>uuid_msgs::UniqueID</code></td>
+<td><code>autoware_perception_msgs::DynamicObject</code></td>
+</tr>
+<tr>
+<td>twist</td>
+<td>Velocity in ROS twist format.</td>
+<td><code>geometry_msgs::TwistWithCovariance</code></td>
+<td><code>autoware_perception_msgs::State</code></td>
+</tr>
+<tr>
+<td>twist_reliable</td>
+<td>Boolean for stable twist or not.</td>
+<td><code>bool</code></td>
+<td><code>autoware_perception_msgs::State</code></td>
+</tr>
+<tr>
+<td>acceleration</td>
+<td>Acceleration in ROS accel format.</td>
+<td><code>geometry_msgs::AccelWithCovariance</code></td>
+<td><code>autoware_perception_msgs::State</code></td>
+</tr>
+<tr>
+<td>acceleration_reliable</td>
+<td>Boolean for stable acceleration or not.</td>
+<td><code>bool</code></td>
+<td><code>autoware_perception_msgs::State</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="prediction">Prediction<a class="headerlink" href="#prediction" title="Permanent link">#</a></h4>
+<p>Prediction component is responsible for clarifying the following objects' property.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Definition</th>
+<th>Data Type</th>
+<th>Parent Data Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>predicted_path</td>
+<td>Predicted future paths for an object.</td>
+<td><code>autoware_perception_msgs::PredictedPath[]</code></td>
+<td><code>autoware_perception_msgs::State</code></td>
+</tr>
+</tbody>
+</table>
+<p>Necessary information is defined in <code>autoware_perception_msg::DynamicObjectArray.msg</code> with layered msg structure.</p>
+<p><img alt="Perception_object_msg" src="../image/PerceptionObjectMsg.svg" /></p>
+<h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">#</a></h3>
+<h4 id="lidar">LiDAR<a class="headerlink" href="#lidar" title="Permanent link">#</a></h4>
+<p><code>sensor_msgs::PointCloud2</code></p>
+<p>LiDAR input is an essential input for recognizing objects. Its ability to describe the 3D world is utilized in detecting obstacles surrounding the vehicle.</p>
+<h4 id="camera-optional">Camera (optional)<a class="headerlink" href="#camera-optional" title="Permanent link">#</a></h4>
+<p><code>sensor_msgs::Image</code></p>
+<p>Camera input is used to obtain details about obstacles. Fine resolution camera enables to detect objects at far distance with high accuracy.</p>
+<h4 id="map">Map<a class="headerlink" href="#map" title="Permanent link">#</a></h4>
+<p><code>autoware_lanelet2_msgs::MapBin</code></p>
+<p>Assuming the obstacles which follow rules in a map, Perception stack can infer objects' property such as orientation or future movements by using map information.</p>
+<h3 id="output_1">Output<a class="headerlink" href="#output_1" title="Permanent link">#</a></h3>
+<p><code>autoware_perception_msgs::DynamicObjectArray</code></p>
+<p>Recognized objects with predicted paths are used in situations like intersection, crosswalk and lane change. Planning stack uses objects' information for avoiding objects or following a vehicle ahead.</p>
+<h2 id="traffic-light-recognition">Traffic light recognition<a class="headerlink" href="#traffic-light-recognition" title="Permanent link">#</a></h2>
+<p>Make sense of traffic light's signal.</p>
+<h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">#</a></h3>
+<p>Not only classifying its color but also understanding unique signals like arrow signals.</p>
+<p>It needs to recognize traffic light signals in order to ensure safe autonomous driving.</p>
+<h3 id="requirement_1">Requirement<a class="headerlink" href="#requirement_1" title="Permanent link">#</a></h3>
+<p>Need to fill <code>lamp_states</code> in <code>autoware_traffic_light_msg::TrafficLightState.msg</code></p>
+<p><img alt="Perception_trafficlight_msg_msg" src="../image/PerceptionTrafficLightMsg.png" /></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Definition</th>
+<th>Data Type</th>
+<th>Parent Data Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>lamp_states</td>
+<td>Sequence of traffic light result</td>
+<td><code>autoware_perception_msgs::LampState[]</code></td>
+<td><code>autoware_perception_msgs::TrafficLightState</code></td>
+</tr>
+<tr>
+<td>id</td>
+<td>This id corresponds to the traffic light id defined in a map</td>
+<td><code>int32</code></td>
+<td><code>autoware_perception_msgs::TrafficLightState</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="input_2">Input<a class="headerlink" href="#input_2" title="Permanent link">#</a></h3>
+<h4 id="camera">Camera<a class="headerlink" href="#camera" title="Permanent link">#</a></h4>
+<p><code>sensor_msgs::Image</code></p>
+<p>Mainly using camera data to make sense of traffic light's color.</p>
+<h4 id="map_1">Map<a class="headerlink" href="#map_1" title="Permanent link">#</a></h4>
+<p><code>autoware_lanelet2_msgs::MapBin</code></p>
+<p>By using a map with traffic light's location, clarify which part of an image needs to be paid attention.</p>
+<h4 id="drive-route-optional">Drive Route (optional)<a class="headerlink" href="#drive-route-optional" title="Permanent link">#</a></h4>
+<p><code>autoware_planning_msgs::Route</code></p>
+<p>With the route associated with the traffic light, improve the accuracy of traffic light recognition.</p>
+<h3 id="output_2">Output<a class="headerlink" href="#output_2" title="Permanent link">#</a></h3>
+<p><code>autoware_perception_msgs::TrafficLightStateArray</code></p>
+<p>Planning stack receives data from this module. It changes the vehicle maneuver based on the result of traffic light recognition.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../../Localization/PoseTwistFusionFilter/PoseTwistFusionFilter/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Pose twist fusion filter" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Pose twist fusion filter
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../ObjectRecognition/Detection/Detection/" class="md-footer__link md-footer__link--next" aria-label="Next: Detection" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Detection
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2021 Tier IV, Inc.
+          </div>
+        
+        
+          Made with
+          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+            Material for MkDocs
+          </a>
+        
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.b1047164.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      
+    
+  </body>
+</html>

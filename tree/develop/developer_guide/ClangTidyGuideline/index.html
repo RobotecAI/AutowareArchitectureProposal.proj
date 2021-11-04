@@ -1,0 +1,5178 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="canonical" href="https://tier4.github.io/autoware.proj/developer_guide/ClangTidyGuideline/">
+      
+      <link rel="icon" href="../../images/tier4.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
+    
+    
+      
+        <title>Clang-Tidy guideline - Autoware Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.a57b2b03.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    
+      <link rel="stylesheet" href="../../css/tier4_color.css">
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#clang-tidy-guidelines" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Autoware Documentation" class="md-header__button md-logo" aria-label="Autoware Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Autoware Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Clang-Tidy guideline
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/tier4/autoware.proj/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Autoware Documentation" class="md-nav__button md-logo" aria-label="Autoware Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Autoware Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/tier4/autoware.proj/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/Requirements/" class="md-nav__link">
+        Requirements
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/HowToInstall/" class="md-nav__link">
+        How to install
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3" type="checkbox" id="__nav_2_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_3">
+          How to run
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="How to run" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          How to run
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/QuickStart/" class="md-nav__link">
+        Quick start
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/SimulationTutorial/" class="md-nav__link">
+        Simulation
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Design
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Design" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Design
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          API
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="API" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          API
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/apis/ja/concept/" class="md-nav__link">
+        Concept
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/apis/ja/list/" class="md-nav__link">
+        List
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1_3" type="checkbox" id="__nav_3_1_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1_3">
+          Proposal
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Proposal" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_1_3">
+          <span class="md-nav__icon md-icon"></span>
+          Proposal
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/apis/ja/state/" class="md-nav__link">
+        State
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2">
+          Architecture
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Architecture" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Architecture
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Sensing/Sensing/" class="md-nav__link">
+        Sensing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_3" type="checkbox" id="__nav_3_2_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_3">
+          Localization
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Localization" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          Localization
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Localization/Localization/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Localization/PoseEstimator/PoseEstimator/" class="md-nav__link">
+        Pose estimator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Localization/TwistEstimator/TwistEstimator/" class="md-nav__link">
+        Twist estimator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Localization/PoseTwistFusionFilter/PoseTwistFusionFilter/" class="md-nav__link">
+        Pose twist fusion filter
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_4" type="checkbox" id="__nav_3_2_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_4">
+          Perception
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Perception" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_4">
+          <span class="md-nav__icon md-icon"></span>
+          Perception
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Perception/Perception/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_4_2" type="checkbox" id="__nav_3_2_4_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_4_2">
+          Object recognition
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Object recognition" data-md-level="4">
+        <label class="md-nav__title" for="__nav_3_2_4_2">
+          <span class="md-nav__icon md-icon"></span>
+          Object recognition
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Perception/ObjectRecognition/Detection/Detection/" class="md-nav__link">
+        Detection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Perception/ObjectRecognition/Tracking/Tracking/" class="md-nav__link">
+        Tracking
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Perception/ObjectRecognition/Prediction/Prediction/" class="md-nav__link">
+        Prediction
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_4_3" type="checkbox" id="__nav_3_2_4_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_4_3">
+          Traffic light recognition
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Traffic light recognition" data-md-level="4">
+        <label class="md-nav__title" for="__nav_3_2_4_3">
+          <span class="md-nav__icon md-icon"></span>
+          Traffic light recognition
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Perception/TrafficLightRecognition/Detection/Detection/" class="md-nav__link">
+        Detection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Perception/TrafficLightRecognition/Classification/Classification/" class="md-nav__link">
+        Classification
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_5" type="checkbox" id="__nav_3_2_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_5">
+          Planning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Planning" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_5">
+          <span class="md-nav__icon md-icon"></span>
+          Planning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Planning/Planning/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Planning/ScenarioSelector/ScenarioSelector/" class="md-nav__link">
+        Scenario selector
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_5_3" type="checkbox" id="__nav_3_2_5_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_5_3">
+          Lane driving Scenario
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Lane driving Scenario" data-md-level="4">
+        <label class="md-nav__title" for="__nav_3_2_5_3">
+          <span class="md-nav__icon md-icon"></span>
+          Lane driving Scenario
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Planning/LaneDriving/LaneDrivingScenario/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Planning/LaneDriving/Behavior/LaneChangePlanner/" class="md-nav__link">
+        Behavior path planning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Planning/LaneDriving/Behavior/BehaviorVelocityPlanner/" class="md-nav__link">
+        Behavior velocity planning
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Planning/Parking/ParkingScenario/" class="md-nav__link">
+        Parking
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Planning/DesignRationale/" class="md-nav__link">
+        Design rationale
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_6" type="checkbox" id="__nav_3_2_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_6">
+          Control
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Control" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_6">
+          <span class="md-nav__icon md-icon"></span>
+          Control
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Control/Control/" class="md-nav__link">
+        Overall
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_6_2" type="checkbox" id="__nav_3_2_6_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_6_2">
+          Trajectory follower
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Trajectory follower" data-md-level="4">
+        <label class="md-nav__title" for="__nav_3_2_6_2">
+          <span class="md-nav__icon md-icon"></span>
+          Trajectory follower
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Control/TrajectoryFollower/LateralController/" class="md-nav__link">
+        Lateral controller
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Control/TrajectoryFollower/LongitudinalController/" class="md-nav__link">
+        Longitudinal controller
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Control/TrajectoryFollower/LatLonCoupler/" class="md-nav__link">
+        Lateral longitudinal coupler
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Control/VehicleCmdGate/VehicleCmdGate/" class="md-nav__link">
+        Vehicle cmd gate
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Vehicle/Vehicle/" class="md-nav__link">
+        Vehicle
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/Map/Map/" class="md-nav__link">
+        Map
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/TF/" class="md-nav__link">
+        TF
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/NamingConvention/" class="md-nav__link">
+        Naming convention
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/ForDevelopers/" class="md-nav__link">
+        For developers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/software_architecture/NodeDiagram/" class="md-nav__link">
+        Node diagram
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/repository/Repository/" class="md-nav__link">
+        Repository
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/release/Release/" class="md-nav__link">
+        Release
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          DeveloperGuide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="DeveloperGuide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          DeveloperGuide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CodingGuideline/" class="md-nav__link">
+        Coding guideline
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PullRequestGuideline/" class="md-nav__link">
+        Pull request guideline
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../UnitTestGuideline/" class="md-nav__link">
+        Unit test guideline
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Clang-Tidy guideline
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Clang-Tidy guideline
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use-clang-tidy-on-your-local-machine" class="md-nav__link">
+    How to use Clang-Tidy on your local machine
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#severity-level" class="md-nav__link">
+    Severity Level
+  </a>
+  
+    <nav class="md-nav" aria-label="Severity Level">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#high" class="md-nav__link">
+    High
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#middle" class="md-nav__link">
+    Middle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#low" class="md-nav__link">
+    Low
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style" class="md-nav__link">
+    Style
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rules" class="md-nav__link">
+    Rules
+  </a>
+  
+    <nav class="md-nav" aria-label="Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clang-diagnostic-" class="md-nav__link">
+    clang-diagnostic-*
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boost-" class="md-nav__link">
+    boost-*
+  </a>
+  
+    <nav class="md-nav" aria-label="boost-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boost-use-to-string-low-doc" class="md-nav__link">
+    boost-use-to-string [LOW] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-" class="md-nav__link">
+    bugprone-*
+  </a>
+  
+    <nav class="md-nav" aria-label="bugprone-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-argument-comment-low-doc" class="md-nav__link">
+    bugprone-argument-comment [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-assert-side-effect-medium-doc" class="md-nav__link">
+    bugprone-assert-side-effect [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-bad-signal-to-kill-thread-medium-doc" class="md-nav__link">
+    bugprone-bad-signal-to-kill-thread [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-bool-pointer-implicit-conversion-low-doc" class="md-nav__link">
+    bugprone-bool-pointer-implicit-conversion [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-branch-clone-low-doc" class="md-nav__link">
+    bugprone-branch-clone [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-copy-constructor-init-medium-doc" class="md-nav__link">
+    bugprone-copy-constructor-init [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-dangling-handle-high-doc" class="md-nav__link">
+    bugprone-dangling-handle [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-dynamic-static-initializers-medium-doc" class="md-nav__link">
+    bugprone-dynamic-static-initializers [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-exception-escape-medium-doc" class="md-nav__link">
+    bugprone-exception-escape [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-fold-init-type-high-doc" class="md-nav__link">
+    bugprone-fold-init-type [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-forward-declaration-namespace-low-doc" class="md-nav__link">
+    bugprone-forward-declaration-namespace [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-forwarding-reference-overload-low-doc" class="md-nav__link">
+    bugprone-forwarding-reference-overload [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-inaccurate-erase-high-doc" class="md-nav__link">
+    bugprone-inaccurate-erase [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-incorrect-roundings-high-doc" class="md-nav__link">
+    bugprone-incorrect-roundings [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-infinite-loop-medium-doc" class="md-nav__link">
+    (bugprone-infinite-loop) [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-integer-division-medium-doc" class="md-nav__link">
+    bugprone-integer-division [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-lambda-function-name-low-doc" class="md-nav__link">
+    bugprone-lambda-function-name [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-macro-parentheses-medium-doc" class="md-nav__link">
+    bugprone-macro-parentheses [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-macro-repeated-side-effects-medium-doc" class="md-nav__link">
+    bugprone-macro-repeated-side-effects [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-misplaced-operator-in-strlen-in-alloc-medium-doc" class="md-nav__link">
+    bugprone-misplaced-operator-in-strlen-in-alloc [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-misplaced-pointer-arithmetic-in-alloc-medium-doc" class="md-nav__link">
+    (bugprone-misplaced-pointer-arithmetic-in-alloc) [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-misplaced-widening-cast-high-doc" class="md-nav__link">
+    bugprone-misplaced-widening-cast [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-move-forwarding-reference-medium-doc" class="md-nav__link">
+    bugprone-move-forwarding-reference [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-multiple-statement-macro-medium-doc" class="md-nav__link">
+    bugprone-multiple-statement-macro [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-no-escape-undefined-doc" class="md-nav__link">
+    (bugprone-no-escape) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-not-null-terminated-result-medium-doc" class="md-nav__link">
+    bugprone-not-null-terminated-result [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-parent-virtual-call-medium-doc" class="md-nav__link">
+    bugprone-parent-virtual-call [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-posix-return-undefined-doc" class="md-nav__link">
+    bugprone-posix-return [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-redundant-branch-condition-low-doc" class="md-nav__link">
+    (bugprone-redundant-branch-condition) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-reserved-identifier-low-doc" class="md-nav__link">
+    (bugprone-reserved-identifier) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-signal-handler-undefined-doc" class="md-nav__link">
+    (bugprone-signal-handler) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-signed-char-misuse-medium-doc" class="md-nav__link">
+    bugprone-signed-char-misuse [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-sizeof-container-high-doc" class="md-nav__link">
+    bugprone-sizeof-container [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-sizeof-expression-high-doc" class="md-nav__link">
+    bugprone-sizeof-expression [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-spuriously-wake-up-functions-undefined-doc" class="md-nav__link">
+    (bugprone-spuriously-wake-up-functions) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-string-constructor-high-doc" class="md-nav__link">
+    bugprone-string-constructor [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-string-integer-assignment-low-doc" class="md-nav__link">
+    bugprone-string-integer-assignment [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-string-literal-with-embedded-nul-medium-doc" class="md-nav__link">
+    bugprone-string-literal-with-embedded-nul [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-suspicious-enum-usage-high-doc" class="md-nav__link">
+    bugprone-suspicious-enum-usage [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-suspicious-include-low-doc" class="md-nav__link">
+    (bugprone-suspicious-include) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-suspicious-memset-usage-high-doc" class="md-nav__link">
+    bugprone-suspicious-memset-usage [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-suspicious-missing-comma-high-doc" class="md-nav__link">
+    bugprone-suspicious-missing-comma [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-suspicious-semicolon-high-doc" class="md-nav__link">
+    bugprone-suspicious-semicolon [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-suspicious-string-compare-medium-doc" class="md-nav__link">
+    bugprone-suspicious-string-compare [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-swapped-arguments-high-doc" class="md-nav__link">
+    bugprone-swapped-arguments [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-terminating-continue-medium-doc" class="md-nav__link">
+    bugprone-terminating-continue [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-throw-keyword-missing-medium-doc" class="md-nav__link">
+    bugprone-throw-keyword-missing [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-too-small-loop-variable-medium-doc" class="md-nav__link">
+    bugprone-too-small-loop-variable [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-undefined-memory-manipulation-medium-doc" class="md-nav__link">
+    bugprone-undefined-memory-manipulation [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-undelegated-constructor-medium-doc" class="md-nav__link">
+    bugprone-undelegated-constructor [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-unhandled-exception-at-new-undefined-doc" class="md-nav__link">
+    (bugprone-unhandled-exception-at-new) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-unhandled-self-assignment-medium-doc" class="md-nav__link">
+    bugprone-unhandled-self-assignment [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-unused-raii-high-doc" class="md-nav__link">
+    bugprone-unused-raii [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-unused-return-value-medium-doc" class="md-nav__link">
+    bugprone-unused-return-value [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-use-after-move-high-doc" class="md-nav__link">
+    bugprone-use-after-move [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-virtual-near-miss-medium-doc" class="md-nav__link">
+    bugprone-virtual-near-miss [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-" class="md-nav__link">
+    cppcoreguidelines-*
+  </a>
+  
+    <nav class="md-nav" aria-label="cppcoreguidelines-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-avoid-goto-style-doc" class="md-nav__link">
+    cppcoreguidelines-avoid-goto [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-avoid-non-const-global-variables-low-doc" class="md-nav__link">
+    (cppcoreguidelines-avoid-non-const-global-variables) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-init-variables-medium-doc" class="md-nav__link">
+    cppcoreguidelines-init-variables [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-interfaces-global-init-low-doc" class="md-nav__link">
+    cppcoreguidelines-interfaces-global-init [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-macro-usage-low-doc" class="md-nav__link">
+    cppcoreguidelines-macro-usage [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-narrowing-conversions-medium-doc" class="md-nav__link">
+    cppcoreguidelines-narrowing-conversions [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-no-malloc-low-doc" class="md-nav__link">
+    cppcoreguidelines-no-malloc [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-owning-memory-style-doc" class="md-nav__link">
+    (cppcoreguidelines-owning-memory) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-prefer-member-initializer-style-doc" class="md-nav__link">
+    cppcoreguidelines-prefer-member-initializer [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-bounds-array-to-pointer-decay-low-doc" class="md-nav__link">
+    (cppcoreguidelines-pro-bounds-array-to-pointer-decay) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-bounds-constant-array-index-low-doc" class="md-nav__link">
+    (cppcoreguidelines-pro-bounds-constant-array-index) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-bounds-pointer-arithmetic-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-bounds-pointer-arithmetic [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-const-cast-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-type-const-cast [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-cstyle-cast-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-type-cstyle-cast [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-member-init-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-type-member-init [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-reinterpret-cast-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-type-reinterpret-cast [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-static-cast-downcast-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-type-static-cast-downcast [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-union-access-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-type-union-access [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-vararg-low-doc" class="md-nav__link">
+    (cppcoreguidelines-pro-type-vararg) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-slicing-low-doc" class="md-nav__link">
+    cppcoreguidelines-slicing [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-special-member-functions-low-doc" class="md-nav__link">
+    cppcoreguidelines-special-member-functions [LOW] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-" class="md-nav__link">
+    google-*
+  </a>
+  
+    <nav class="md-nav" aria-label="google-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#google-build-explicit-make-pair-medium-doc" class="md-nav__link">
+    google-build-explicit-make-pair [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-build-namespaces-medium-doc" class="md-nav__link">
+    google-build-namespaces [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-build-using-namespace-style-doc" class="md-nav__link">
+    google-build-using-namespace [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-default-arguments-low-doc" class="md-nav__link">
+    (google-default-arguments) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-explicit-constructor-medium-doc" class="md-nav__link">
+    google-explicit-constructor [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-global-names-in-headers-style-doc" class="md-nav__link">
+    google-global-names-in-headers [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-objc-avoid-nsobject-new-undefined-doc" class="md-nav__link">
+    (google-objc-avoid-nsobject-new) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-objc-avoid-throwing-exception-undefined-doc" class="md-nav__link">
+    (google-objc-avoid-throwing-exception) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-objc-function-naming-undefined-doc" class="md-nav__link">
+    (google-objc-function-naming) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-objc-global-variable-declaration-undefined-doc" class="md-nav__link">
+    (google-objc-global-variable-declaration) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-readability-avoid-underscore-in-googletest-name-style-doc" class="md-nav__link">
+    (google-readability-avoid-underscore-in-googletest-name) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-readability-casting-low-doc" class="md-nav__link">
+    (google-readability-casting) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-readability-todo-style-doc" class="md-nav__link">
+    (google-readability-todo) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-runtime-int-low-doc" class="md-nav__link">
+    (google-runtime-int) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-runtime-operator-medium-doc" class="md-nav__link">
+    (google-runtime-operator) [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-upgrade-googletest-case-style-doc" class="md-nav__link">
+    google-upgrade-googletest-case [STYLE] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hicpp-" class="md-nav__link">
+    hicpp-*
+  </a>
+  
+    <nav class="md-nav" aria-label="hicpp-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hicpp-exception-baseclass-low-doc" class="md-nav__link">
+    hicpp-exception-baseclass [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hicpp-multiway-paths-covered-style-doc" class="md-nav__link">
+    hicpp-multiway-paths-covered [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hicpp-no-assembler-low-doc" class="md-nav__link">
+    hicpp-no-assembler [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hicpp-signed-bitwise-low-doc" class="md-nav__link">
+    hicpp-signed-bitwise [LOW] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llvm-" class="md-nav__link">
+    llvm-*
+  </a>
+  
+    <nav class="md-nav" aria-label="llvm-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#llvm-namespace-comment-low-doc" class="md-nav__link">
+    llvm-namespace-comment [LOW] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-" class="md-nav__link">
+    misc-*
+  </a>
+  
+    <nav class="md-nav" aria-label="misc-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#misc-definitions-in-headers-medium-doc" class="md-nav__link">
+    misc-definitions-in-headers [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-misplaced-const-low-doc" class="md-nav__link">
+    misc-misplaced-const [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-new-delete-overloads-medium-doc" class="md-nav__link">
+    misc-new-delete-overloads [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-no-recursion-low-doc" class="md-nav__link">
+    misc-no-recursion [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-non-copyable-objects-high-doc" class="md-nav__link">
+    misc-non-copyable-objects [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-non-private-member-variables-in-classes-low-doc" class="md-nav__link">
+    (misc-non-private-member-variables-in-classes) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-redundant-expression-medium-doc" class="md-nav__link">
+    misc-redundant-expression [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-static-assert-low-doc" class="md-nav__link">
+    misc-static-assert [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-throw-by-value-catch-by-reference-high-doc" class="md-nav__link">
+    misc-throw-by-value-catch-by-reference [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-unconventional-assign-operator-medium-doc" class="md-nav__link">
+    misc-unconventional-assign-operator [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-uniqueptr-reset-release-medium-doc" class="md-nav__link">
+    misc-uniqueptr-reset-release [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-unused-alias-decls-low-doc" class="md-nav__link">
+    misc-unused-alias-decls [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-unused-parameters-low-doc" class="md-nav__link">
+    misc-unused-parameters [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-unused-using-decls-low-doc" class="md-nav__link">
+    misc-unused-using-decls [LOW] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-" class="md-nav__link">
+    modernize-*
+  </a>
+  
+    <nav class="md-nav" aria-label="modernize-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modernize-avoid-bind-style-doc" class="md-nav__link">
+    (modernize-avoid-bind) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-avoid-c-arrays-low-doc" class="md-nav__link">
+    modernize-avoid-c-arrays [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-concat-nested-namespaces-style-doc" class="md-nav__link">
+    modernize-concat-nested-namespaces [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-deprecated-headers-low-doc" class="md-nav__link">
+    modernize-deprecated-headers [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-deprecated-ios-base-aliases-low-doc" class="md-nav__link">
+    modernize-deprecated-ios-base-aliases [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-loop-convert-style-doc" class="md-nav__link">
+    modernize-loop-convert [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-make-shared-low-doc" class="md-nav__link">
+    modernize-make-shared [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-make-unique-low-doc" class="md-nav__link">
+    modernize-make-unique [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-pass-by-value-low-doc" class="md-nav__link">
+    modernize-pass-by-value [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-raw-string-literal-style-doc" class="md-nav__link">
+    modernize-raw-string-literal [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-redundant-void-arg-style-doc" class="md-nav__link">
+    modernize-redundant-void-arg [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-replace-auto-ptr-low-doc" class="md-nav__link">
+    modernize-replace-auto-ptr [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-replace-disallow-copy-and-assign-macro-low-doc" class="md-nav__link">
+    modernize-replace-disallow-copy-and-assign-macro [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-replace-random-shuffle-low-doc" class="md-nav__link">
+    modernize-replace-random-shuffle [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-return-braced-init-list-style-doc" class="md-nav__link">
+    modernize-return-braced-init-list [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-shrink-to-fit-style-doc" class="md-nav__link">
+    modernize-shrink-to-fit [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-unary-static-assert-style-doc" class="md-nav__link">
+    modernize-unary-static-assert [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-auto-style-doc" class="md-nav__link">
+    modernize-use-auto [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-bool-literals-style-doc" class="md-nav__link">
+    modernize-use-bool-literals [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-default-member-init-style-doc" class="md-nav__link">
+    modernize-use-default-member-init [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-emplace-style-doc" class="md-nav__link">
+    modernize-use-emplace [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-equals-default-style-doc" class="md-nav__link">
+    modernize-use-equals-default [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-equals-delete-style-doc" class="md-nav__link">
+    modernize-use-equals-delete [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-nodiscard-low-doc" class="md-nav__link">
+    modernize-use-nodiscard [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-noexcept-low-doc" class="md-nav__link">
+    modernize-use-noexcept [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-nullptr-low-doc" class="md-nav__link">
+    modernize-use-nullptr [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-override-low-doc" class="md-nav__link">
+    modernize-use-override [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-trailing-return-type-low-doc" class="md-nav__link">
+    (modernize-use-trailing-return-type) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-transparent-functors-low-doc" class="md-nav__link">
+    modernize-use-transparent-functors [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-uncaught-exceptions-style-doc" class="md-nav__link">
+    modernize-use-uncaught-exceptions [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-using-style-doc" class="md-nav__link">
+    modernize-use-using [STYLE] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openmp-" class="md-nav__link">
+    openmp-*
+  </a>
+  
+    <nav class="md-nav" aria-label="openmp-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#openmp-use-default-none-undefined-doc" class="md-nav__link">
+    openmp-use-default-none [undefined] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-" class="md-nav__link">
+    performance-*
+  </a>
+  
+    <nav class="md-nav" aria-label="performance-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-faster-string-find-low-doc" class="md-nav__link">
+    performance-faster-string-find [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-for-range-copy-low-doc" class="md-nav__link">
+    performance-for-range-copy [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-implicit-conversion-in-loop-low-doc" class="md-nav__link">
+    performance-implicit-conversion-in-loop [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-inefficient-algorithm-medium-doc" class="md-nav__link">
+    performance-inefficient-algorithm [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-inefficient-string-concatenation-low-doc" class="md-nav__link">
+    performance-inefficient-string-concatenation [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-inefficient-vector-operation-low-doc" class="md-nav__link">
+    performance-inefficient-vector-operation [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-move-const-arg-medium-doc" class="md-nav__link">
+    performance-move-const-arg [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-move-constructor-init-medium-doc" class="md-nav__link">
+    performance-move-constructor-init [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-no-automatic-move-low-doc" class="md-nav__link">
+    performance-no-automatic-move [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-no-int-to-ptr-low-doc" class="md-nav__link">
+    performance-no-int-to-ptr [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-noexcept-move-constructor-medium-doc" class="md-nav__link">
+    performance-noexcept-move-constructor [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-trivially-destructible-low-doc" class="md-nav__link">
+    performance-trivially-destructible [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-type-promotion-in-math-fn-low-doc" class="md-nav__link">
+    performance-type-promotion-in-math-fn [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-unnecessary-copy-initialization-low-doc" class="md-nav__link">
+    performance-unnecessary-copy-initialization [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-unnecessary-value-param-low-doc" class="md-nav__link">
+    performance-unnecessary-value-param [LOW] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#portability-" class="md-nav__link">
+    portability-*
+  </a>
+  
+    <nav class="md-nav" aria-label="portability-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#portability-simd-intrinsics-style-doc" class="md-nav__link">
+    portability-simd-intrinsics [STYLE] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-" class="md-nav__link">
+    readability-*
+  </a>
+  
+    <nav class="md-nav" aria-label="readability-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#readability-avoid-const-params-in-decls-style-doc" class="md-nav__link">
+    (readability-avoid-const-params-in-decls) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-braces-around-statements-style-doc" class="md-nav__link">
+    (readability-braces-around-statements) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-const-return-type-low-doc" class="md-nav__link">
+    readability-const-return-type [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-container-size-empty-style-doc" class="md-nav__link">
+    readability-container-size-empty [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-convert-member-functions-to-static-style-doc" class="md-nav__link">
+    readability-convert-member-functions-to-static [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-delete-null-pointer-style-doc" class="md-nav__link">
+    readability-delete-null-pointer [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-else-after-return-style-doc" class="md-nav__link">
+    readability-else-after-return [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-function-cognitive-complexity-style-doc" class="md-nav__link">
+    readability-function-cognitive-complexity [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-function-size-style-doc" class="md-nav__link">
+    (readability-function-size) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-identifier-length-style-doc" class="md-nav__link">
+    (readability-identifier-length) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-identifier-naming-style-doc" class="md-nav__link">
+    (readability-identifier-naming) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-implicit-bool-conversion-style-doc" class="md-nav__link">
+    (readability-implicit-bool-conversion) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-inconsistent-declaration-parameter-name-style-doc" class="md-nav__link">
+    readability-inconsistent-declaration-parameter-name [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-isolate-declaration-style-doc" class="md-nav__link">
+    readability-isolate-declaration [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-magic-numbers-style-doc" class="md-nav__link">
+    (readability-magic-numbers) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-make-member-function-const-style-doc" class="md-nav__link">
+    readability-make-member-function-const [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-misleading-indentation-low-doc" class="md-nav__link">
+    readability-misleading-indentation [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-misplaced-array-index-style-doc" class="md-nav__link">
+    readability-misplaced-array-index [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-named-parameter-style-doc" class="md-nav__link">
+    (readability-named-parameter) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-non-const-parameter-style-doc" class="md-nav__link">
+    readability-non-const-parameter [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-qualified-auto-low-doc" class="md-nav__link">
+    (readability-qualified-auto) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-access-specifiers-style-doc" class="md-nav__link">
+    readability-redundant-access-specifiers [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-control-flow-style-doc" class="md-nav__link">
+    readability-redundant-control-flow [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-declaration-style-doc" class="md-nav__link">
+    readability-redundant-declaration [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-function-ptr-dereference-style-doc" class="md-nav__link">
+    readability-redundant-function-ptr-dereference [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-member-init-style-doc" class="md-nav__link">
+    readability-redundant-member-init [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-preprocessor-style-doc" class="md-nav__link">
+    (readability-redundant-preprocessor) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-smartptr-get-style-doc" class="md-nav__link">
+    readability-redundant-smartptr-get [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-string-cstr-style-doc" class="md-nav__link">
+    readability-redundant-string-cstr [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-string-init-style-doc" class="md-nav__link">
+    readability-redundant-string-init [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-simplify-boolean-expr-medium-doc" class="md-nav__link">
+    readability-simplify-boolean-expr [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-simplify-subscript-expr-style-doc" class="md-nav__link">
+    readability-simplify-subscript-expr [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-static-accessed-through-instance-style-doc" class="md-nav__link">
+    readability-static-accessed-through-instance [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-static-definition-in-anonymous-namespace-style-doc" class="md-nav__link">
+    readability-static-definition-in-anonymous-namespace [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-string-compare-low-doc" class="md-nav__link">
+    readability-string-compare [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-suspicious-call-argument-low-doc" class="md-nav__link">
+    (readability-suspicious-call-argument) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-uniqueptr-delete-release-style-doc" class="md-nav__link">
+    readability-uniqueptr-delete-release [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-uppercase-literal-suffix-style-doc" class="md-nav__link">
+    (readability-uppercase-literal-suffix) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-use-anyofallof-style-doc" class="md-nav__link">
+    readability-use-anyofallof [STYLE] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5">
+          Knowhow
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Knowhow" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_5">
+          <span class="md-nav__icon md-icon"></span>
+          Knowhow
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../knowhow/PortingToROS2/" class="md-nav__link">
+        Porting ROS1 code to ROS2
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          License/Credit
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="License/Credit" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          License/Credit
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Credits/" class="md-nav__link">
+        Credits
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../License/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use-clang-tidy-on-your-local-machine" class="md-nav__link">
+    How to use Clang-Tidy on your local machine
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#severity-level" class="md-nav__link">
+    Severity Level
+  </a>
+  
+    <nav class="md-nav" aria-label="Severity Level">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#high" class="md-nav__link">
+    High
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#middle" class="md-nav__link">
+    Middle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#low" class="md-nav__link">
+    Low
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style" class="md-nav__link">
+    Style
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rules" class="md-nav__link">
+    Rules
+  </a>
+  
+    <nav class="md-nav" aria-label="Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clang-diagnostic-" class="md-nav__link">
+    clang-diagnostic-*
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boost-" class="md-nav__link">
+    boost-*
+  </a>
+  
+    <nav class="md-nav" aria-label="boost-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boost-use-to-string-low-doc" class="md-nav__link">
+    boost-use-to-string [LOW] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-" class="md-nav__link">
+    bugprone-*
+  </a>
+  
+    <nav class="md-nav" aria-label="bugprone-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-argument-comment-low-doc" class="md-nav__link">
+    bugprone-argument-comment [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-assert-side-effect-medium-doc" class="md-nav__link">
+    bugprone-assert-side-effect [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-bad-signal-to-kill-thread-medium-doc" class="md-nav__link">
+    bugprone-bad-signal-to-kill-thread [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-bool-pointer-implicit-conversion-low-doc" class="md-nav__link">
+    bugprone-bool-pointer-implicit-conversion [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-branch-clone-low-doc" class="md-nav__link">
+    bugprone-branch-clone [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-copy-constructor-init-medium-doc" class="md-nav__link">
+    bugprone-copy-constructor-init [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-dangling-handle-high-doc" class="md-nav__link">
+    bugprone-dangling-handle [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-dynamic-static-initializers-medium-doc" class="md-nav__link">
+    bugprone-dynamic-static-initializers [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-exception-escape-medium-doc" class="md-nav__link">
+    bugprone-exception-escape [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-fold-init-type-high-doc" class="md-nav__link">
+    bugprone-fold-init-type [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-forward-declaration-namespace-low-doc" class="md-nav__link">
+    bugprone-forward-declaration-namespace [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-forwarding-reference-overload-low-doc" class="md-nav__link">
+    bugprone-forwarding-reference-overload [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-inaccurate-erase-high-doc" class="md-nav__link">
+    bugprone-inaccurate-erase [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-incorrect-roundings-high-doc" class="md-nav__link">
+    bugprone-incorrect-roundings [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-infinite-loop-medium-doc" class="md-nav__link">
+    (bugprone-infinite-loop) [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-integer-division-medium-doc" class="md-nav__link">
+    bugprone-integer-division [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-lambda-function-name-low-doc" class="md-nav__link">
+    bugprone-lambda-function-name [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-macro-parentheses-medium-doc" class="md-nav__link">
+    bugprone-macro-parentheses [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-macro-repeated-side-effects-medium-doc" class="md-nav__link">
+    bugprone-macro-repeated-side-effects [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-misplaced-operator-in-strlen-in-alloc-medium-doc" class="md-nav__link">
+    bugprone-misplaced-operator-in-strlen-in-alloc [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-misplaced-pointer-arithmetic-in-alloc-medium-doc" class="md-nav__link">
+    (bugprone-misplaced-pointer-arithmetic-in-alloc) [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-misplaced-widening-cast-high-doc" class="md-nav__link">
+    bugprone-misplaced-widening-cast [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-move-forwarding-reference-medium-doc" class="md-nav__link">
+    bugprone-move-forwarding-reference [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-multiple-statement-macro-medium-doc" class="md-nav__link">
+    bugprone-multiple-statement-macro [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-no-escape-undefined-doc" class="md-nav__link">
+    (bugprone-no-escape) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-not-null-terminated-result-medium-doc" class="md-nav__link">
+    bugprone-not-null-terminated-result [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-parent-virtual-call-medium-doc" class="md-nav__link">
+    bugprone-parent-virtual-call [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-posix-return-undefined-doc" class="md-nav__link">
+    bugprone-posix-return [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-redundant-branch-condition-low-doc" class="md-nav__link">
+    (bugprone-redundant-branch-condition) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-reserved-identifier-low-doc" class="md-nav__link">
+    (bugprone-reserved-identifier) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-signal-handler-undefined-doc" class="md-nav__link">
+    (bugprone-signal-handler) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-signed-char-misuse-medium-doc" class="md-nav__link">
+    bugprone-signed-char-misuse [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-sizeof-container-high-doc" class="md-nav__link">
+    bugprone-sizeof-container [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-sizeof-expression-high-doc" class="md-nav__link">
+    bugprone-sizeof-expression [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-spuriously-wake-up-functions-undefined-doc" class="md-nav__link">
+    (bugprone-spuriously-wake-up-functions) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-string-constructor-high-doc" class="md-nav__link">
+    bugprone-string-constructor [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-string-integer-assignment-low-doc" class="md-nav__link">
+    bugprone-string-integer-assignment [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-string-literal-with-embedded-nul-medium-doc" class="md-nav__link">
+    bugprone-string-literal-with-embedded-nul [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-suspicious-enum-usage-high-doc" class="md-nav__link">
+    bugprone-suspicious-enum-usage [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-suspicious-include-low-doc" class="md-nav__link">
+    (bugprone-suspicious-include) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-suspicious-memset-usage-high-doc" class="md-nav__link">
+    bugprone-suspicious-memset-usage [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-suspicious-missing-comma-high-doc" class="md-nav__link">
+    bugprone-suspicious-missing-comma [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-suspicious-semicolon-high-doc" class="md-nav__link">
+    bugprone-suspicious-semicolon [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-suspicious-string-compare-medium-doc" class="md-nav__link">
+    bugprone-suspicious-string-compare [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-swapped-arguments-high-doc" class="md-nav__link">
+    bugprone-swapped-arguments [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-terminating-continue-medium-doc" class="md-nav__link">
+    bugprone-terminating-continue [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-throw-keyword-missing-medium-doc" class="md-nav__link">
+    bugprone-throw-keyword-missing [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-too-small-loop-variable-medium-doc" class="md-nav__link">
+    bugprone-too-small-loop-variable [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-undefined-memory-manipulation-medium-doc" class="md-nav__link">
+    bugprone-undefined-memory-manipulation [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-undelegated-constructor-medium-doc" class="md-nav__link">
+    bugprone-undelegated-constructor [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-unhandled-exception-at-new-undefined-doc" class="md-nav__link">
+    (bugprone-unhandled-exception-at-new) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-unhandled-self-assignment-medium-doc" class="md-nav__link">
+    bugprone-unhandled-self-assignment [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-unused-raii-high-doc" class="md-nav__link">
+    bugprone-unused-raii [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-unused-return-value-medium-doc" class="md-nav__link">
+    bugprone-unused-return-value [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-use-after-move-high-doc" class="md-nav__link">
+    bugprone-use-after-move [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bugprone-virtual-near-miss-medium-doc" class="md-nav__link">
+    bugprone-virtual-near-miss [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-" class="md-nav__link">
+    cppcoreguidelines-*
+  </a>
+  
+    <nav class="md-nav" aria-label="cppcoreguidelines-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-avoid-goto-style-doc" class="md-nav__link">
+    cppcoreguidelines-avoid-goto [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-avoid-non-const-global-variables-low-doc" class="md-nav__link">
+    (cppcoreguidelines-avoid-non-const-global-variables) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-init-variables-medium-doc" class="md-nav__link">
+    cppcoreguidelines-init-variables [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-interfaces-global-init-low-doc" class="md-nav__link">
+    cppcoreguidelines-interfaces-global-init [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-macro-usage-low-doc" class="md-nav__link">
+    cppcoreguidelines-macro-usage [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-narrowing-conversions-medium-doc" class="md-nav__link">
+    cppcoreguidelines-narrowing-conversions [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-no-malloc-low-doc" class="md-nav__link">
+    cppcoreguidelines-no-malloc [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-owning-memory-style-doc" class="md-nav__link">
+    (cppcoreguidelines-owning-memory) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-prefer-member-initializer-style-doc" class="md-nav__link">
+    cppcoreguidelines-prefer-member-initializer [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-bounds-array-to-pointer-decay-low-doc" class="md-nav__link">
+    (cppcoreguidelines-pro-bounds-array-to-pointer-decay) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-bounds-constant-array-index-low-doc" class="md-nav__link">
+    (cppcoreguidelines-pro-bounds-constant-array-index) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-bounds-pointer-arithmetic-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-bounds-pointer-arithmetic [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-const-cast-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-type-const-cast [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-cstyle-cast-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-type-cstyle-cast [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-member-init-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-type-member-init [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-reinterpret-cast-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-type-reinterpret-cast [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-static-cast-downcast-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-type-static-cast-downcast [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-union-access-low-doc" class="md-nav__link">
+    cppcoreguidelines-pro-type-union-access [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-pro-type-vararg-low-doc" class="md-nav__link">
+    (cppcoreguidelines-pro-type-vararg) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-slicing-low-doc" class="md-nav__link">
+    cppcoreguidelines-slicing [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cppcoreguidelines-special-member-functions-low-doc" class="md-nav__link">
+    cppcoreguidelines-special-member-functions [LOW] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-" class="md-nav__link">
+    google-*
+  </a>
+  
+    <nav class="md-nav" aria-label="google-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#google-build-explicit-make-pair-medium-doc" class="md-nav__link">
+    google-build-explicit-make-pair [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-build-namespaces-medium-doc" class="md-nav__link">
+    google-build-namespaces [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-build-using-namespace-style-doc" class="md-nav__link">
+    google-build-using-namespace [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-default-arguments-low-doc" class="md-nav__link">
+    (google-default-arguments) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-explicit-constructor-medium-doc" class="md-nav__link">
+    google-explicit-constructor [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-global-names-in-headers-style-doc" class="md-nav__link">
+    google-global-names-in-headers [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-objc-avoid-nsobject-new-undefined-doc" class="md-nav__link">
+    (google-objc-avoid-nsobject-new) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-objc-avoid-throwing-exception-undefined-doc" class="md-nav__link">
+    (google-objc-avoid-throwing-exception) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-objc-function-naming-undefined-doc" class="md-nav__link">
+    (google-objc-function-naming) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-objc-global-variable-declaration-undefined-doc" class="md-nav__link">
+    (google-objc-global-variable-declaration) [undefined] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-readability-avoid-underscore-in-googletest-name-style-doc" class="md-nav__link">
+    (google-readability-avoid-underscore-in-googletest-name) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-readability-casting-low-doc" class="md-nav__link">
+    (google-readability-casting) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-readability-todo-style-doc" class="md-nav__link">
+    (google-readability-todo) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-runtime-int-low-doc" class="md-nav__link">
+    (google-runtime-int) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-runtime-operator-medium-doc" class="md-nav__link">
+    (google-runtime-operator) [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-upgrade-googletest-case-style-doc" class="md-nav__link">
+    google-upgrade-googletest-case [STYLE] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hicpp-" class="md-nav__link">
+    hicpp-*
+  </a>
+  
+    <nav class="md-nav" aria-label="hicpp-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hicpp-exception-baseclass-low-doc" class="md-nav__link">
+    hicpp-exception-baseclass [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hicpp-multiway-paths-covered-style-doc" class="md-nav__link">
+    hicpp-multiway-paths-covered [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hicpp-no-assembler-low-doc" class="md-nav__link">
+    hicpp-no-assembler [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hicpp-signed-bitwise-low-doc" class="md-nav__link">
+    hicpp-signed-bitwise [LOW] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llvm-" class="md-nav__link">
+    llvm-*
+  </a>
+  
+    <nav class="md-nav" aria-label="llvm-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#llvm-namespace-comment-low-doc" class="md-nav__link">
+    llvm-namespace-comment [LOW] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-" class="md-nav__link">
+    misc-*
+  </a>
+  
+    <nav class="md-nav" aria-label="misc-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#misc-definitions-in-headers-medium-doc" class="md-nav__link">
+    misc-definitions-in-headers [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-misplaced-const-low-doc" class="md-nav__link">
+    misc-misplaced-const [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-new-delete-overloads-medium-doc" class="md-nav__link">
+    misc-new-delete-overloads [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-no-recursion-low-doc" class="md-nav__link">
+    misc-no-recursion [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-non-copyable-objects-high-doc" class="md-nav__link">
+    misc-non-copyable-objects [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-non-private-member-variables-in-classes-low-doc" class="md-nav__link">
+    (misc-non-private-member-variables-in-classes) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-redundant-expression-medium-doc" class="md-nav__link">
+    misc-redundant-expression [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-static-assert-low-doc" class="md-nav__link">
+    misc-static-assert [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-throw-by-value-catch-by-reference-high-doc" class="md-nav__link">
+    misc-throw-by-value-catch-by-reference [HIGH] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-unconventional-assign-operator-medium-doc" class="md-nav__link">
+    misc-unconventional-assign-operator [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-uniqueptr-reset-release-medium-doc" class="md-nav__link">
+    misc-uniqueptr-reset-release [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-unused-alias-decls-low-doc" class="md-nav__link">
+    misc-unused-alias-decls [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-unused-parameters-low-doc" class="md-nav__link">
+    misc-unused-parameters [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-unused-using-decls-low-doc" class="md-nav__link">
+    misc-unused-using-decls [LOW] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-" class="md-nav__link">
+    modernize-*
+  </a>
+  
+    <nav class="md-nav" aria-label="modernize-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modernize-avoid-bind-style-doc" class="md-nav__link">
+    (modernize-avoid-bind) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-avoid-c-arrays-low-doc" class="md-nav__link">
+    modernize-avoid-c-arrays [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-concat-nested-namespaces-style-doc" class="md-nav__link">
+    modernize-concat-nested-namespaces [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-deprecated-headers-low-doc" class="md-nav__link">
+    modernize-deprecated-headers [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-deprecated-ios-base-aliases-low-doc" class="md-nav__link">
+    modernize-deprecated-ios-base-aliases [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-loop-convert-style-doc" class="md-nav__link">
+    modernize-loop-convert [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-make-shared-low-doc" class="md-nav__link">
+    modernize-make-shared [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-make-unique-low-doc" class="md-nav__link">
+    modernize-make-unique [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-pass-by-value-low-doc" class="md-nav__link">
+    modernize-pass-by-value [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-raw-string-literal-style-doc" class="md-nav__link">
+    modernize-raw-string-literal [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-redundant-void-arg-style-doc" class="md-nav__link">
+    modernize-redundant-void-arg [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-replace-auto-ptr-low-doc" class="md-nav__link">
+    modernize-replace-auto-ptr [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-replace-disallow-copy-and-assign-macro-low-doc" class="md-nav__link">
+    modernize-replace-disallow-copy-and-assign-macro [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-replace-random-shuffle-low-doc" class="md-nav__link">
+    modernize-replace-random-shuffle [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-return-braced-init-list-style-doc" class="md-nav__link">
+    modernize-return-braced-init-list [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-shrink-to-fit-style-doc" class="md-nav__link">
+    modernize-shrink-to-fit [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-unary-static-assert-style-doc" class="md-nav__link">
+    modernize-unary-static-assert [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-auto-style-doc" class="md-nav__link">
+    modernize-use-auto [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-bool-literals-style-doc" class="md-nav__link">
+    modernize-use-bool-literals [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-default-member-init-style-doc" class="md-nav__link">
+    modernize-use-default-member-init [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-emplace-style-doc" class="md-nav__link">
+    modernize-use-emplace [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-equals-default-style-doc" class="md-nav__link">
+    modernize-use-equals-default [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-equals-delete-style-doc" class="md-nav__link">
+    modernize-use-equals-delete [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-nodiscard-low-doc" class="md-nav__link">
+    modernize-use-nodiscard [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-noexcept-low-doc" class="md-nav__link">
+    modernize-use-noexcept [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-nullptr-low-doc" class="md-nav__link">
+    modernize-use-nullptr [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-override-low-doc" class="md-nav__link">
+    modernize-use-override [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-trailing-return-type-low-doc" class="md-nav__link">
+    (modernize-use-trailing-return-type) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-transparent-functors-low-doc" class="md-nav__link">
+    modernize-use-transparent-functors [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-uncaught-exceptions-style-doc" class="md-nav__link">
+    modernize-use-uncaught-exceptions [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modernize-use-using-style-doc" class="md-nav__link">
+    modernize-use-using [STYLE] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openmp-" class="md-nav__link">
+    openmp-*
+  </a>
+  
+    <nav class="md-nav" aria-label="openmp-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#openmp-use-default-none-undefined-doc" class="md-nav__link">
+    openmp-use-default-none [undefined] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-" class="md-nav__link">
+    performance-*
+  </a>
+  
+    <nav class="md-nav" aria-label="performance-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-faster-string-find-low-doc" class="md-nav__link">
+    performance-faster-string-find [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-for-range-copy-low-doc" class="md-nav__link">
+    performance-for-range-copy [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-implicit-conversion-in-loop-low-doc" class="md-nav__link">
+    performance-implicit-conversion-in-loop [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-inefficient-algorithm-medium-doc" class="md-nav__link">
+    performance-inefficient-algorithm [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-inefficient-string-concatenation-low-doc" class="md-nav__link">
+    performance-inefficient-string-concatenation [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-inefficient-vector-operation-low-doc" class="md-nav__link">
+    performance-inefficient-vector-operation [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-move-const-arg-medium-doc" class="md-nav__link">
+    performance-move-const-arg [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-move-constructor-init-medium-doc" class="md-nav__link">
+    performance-move-constructor-init [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-no-automatic-move-low-doc" class="md-nav__link">
+    performance-no-automatic-move [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-no-int-to-ptr-low-doc" class="md-nav__link">
+    performance-no-int-to-ptr [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-noexcept-move-constructor-medium-doc" class="md-nav__link">
+    performance-noexcept-move-constructor [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-trivially-destructible-low-doc" class="md-nav__link">
+    performance-trivially-destructible [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-type-promotion-in-math-fn-low-doc" class="md-nav__link">
+    performance-type-promotion-in-math-fn [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-unnecessary-copy-initialization-low-doc" class="md-nav__link">
+    performance-unnecessary-copy-initialization [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-unnecessary-value-param-low-doc" class="md-nav__link">
+    performance-unnecessary-value-param [LOW] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#portability-" class="md-nav__link">
+    portability-*
+  </a>
+  
+    <nav class="md-nav" aria-label="portability-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#portability-simd-intrinsics-style-doc" class="md-nav__link">
+    portability-simd-intrinsics [STYLE] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-" class="md-nav__link">
+    readability-*
+  </a>
+  
+    <nav class="md-nav" aria-label="readability-*">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#readability-avoid-const-params-in-decls-style-doc" class="md-nav__link">
+    (readability-avoid-const-params-in-decls) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-braces-around-statements-style-doc" class="md-nav__link">
+    (readability-braces-around-statements) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-const-return-type-low-doc" class="md-nav__link">
+    readability-const-return-type [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-container-size-empty-style-doc" class="md-nav__link">
+    readability-container-size-empty [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-convert-member-functions-to-static-style-doc" class="md-nav__link">
+    readability-convert-member-functions-to-static [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-delete-null-pointer-style-doc" class="md-nav__link">
+    readability-delete-null-pointer [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-else-after-return-style-doc" class="md-nav__link">
+    readability-else-after-return [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-function-cognitive-complexity-style-doc" class="md-nav__link">
+    readability-function-cognitive-complexity [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-function-size-style-doc" class="md-nav__link">
+    (readability-function-size) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-identifier-length-style-doc" class="md-nav__link">
+    (readability-identifier-length) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-identifier-naming-style-doc" class="md-nav__link">
+    (readability-identifier-naming) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-implicit-bool-conversion-style-doc" class="md-nav__link">
+    (readability-implicit-bool-conversion) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-inconsistent-declaration-parameter-name-style-doc" class="md-nav__link">
+    readability-inconsistent-declaration-parameter-name [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-isolate-declaration-style-doc" class="md-nav__link">
+    readability-isolate-declaration [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-magic-numbers-style-doc" class="md-nav__link">
+    (readability-magic-numbers) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-make-member-function-const-style-doc" class="md-nav__link">
+    readability-make-member-function-const [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-misleading-indentation-low-doc" class="md-nav__link">
+    readability-misleading-indentation [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-misplaced-array-index-style-doc" class="md-nav__link">
+    readability-misplaced-array-index [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-named-parameter-style-doc" class="md-nav__link">
+    (readability-named-parameter) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-non-const-parameter-style-doc" class="md-nav__link">
+    readability-non-const-parameter [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-qualified-auto-low-doc" class="md-nav__link">
+    (readability-qualified-auto) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-access-specifiers-style-doc" class="md-nav__link">
+    readability-redundant-access-specifiers [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-control-flow-style-doc" class="md-nav__link">
+    readability-redundant-control-flow [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-declaration-style-doc" class="md-nav__link">
+    readability-redundant-declaration [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-function-ptr-dereference-style-doc" class="md-nav__link">
+    readability-redundant-function-ptr-dereference [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-member-init-style-doc" class="md-nav__link">
+    readability-redundant-member-init [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-preprocessor-style-doc" class="md-nav__link">
+    (readability-redundant-preprocessor) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-smartptr-get-style-doc" class="md-nav__link">
+    readability-redundant-smartptr-get [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-string-cstr-style-doc" class="md-nav__link">
+    readability-redundant-string-cstr [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-redundant-string-init-style-doc" class="md-nav__link">
+    readability-redundant-string-init [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-simplify-boolean-expr-medium-doc" class="md-nav__link">
+    readability-simplify-boolean-expr [MEDIUM] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-simplify-subscript-expr-style-doc" class="md-nav__link">
+    readability-simplify-subscript-expr [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-static-accessed-through-instance-style-doc" class="md-nav__link">
+    readability-static-accessed-through-instance [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-static-definition-in-anonymous-namespace-style-doc" class="md-nav__link">
+    readability-static-definition-in-anonymous-namespace [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-string-compare-low-doc" class="md-nav__link">
+    readability-string-compare [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-suspicious-call-argument-low-doc" class="md-nav__link">
+    (readability-suspicious-call-argument) [LOW] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-uniqueptr-delete-release-style-doc" class="md-nav__link">
+    readability-uniqueptr-delete-release [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-uppercase-literal-suffix-style-doc" class="md-nav__link">
+    (readability-uppercase-literal-suffix) [STYLE] (doc)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readability-use-anyofallof-style-doc" class="md-nav__link">
+    readability-use-anyofallof [STYLE] (doc)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/tier4/autoware.proj/edit/main/docs/developer_guide/ClangTidyGuideline.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="clang-tidy-guidelines">Clang-Tidy Guidelines<a class="headerlink" href="#clang-tidy-guidelines" title="Permanent link">#</a></h1>
+<p>Weekly Clang-Tidy analysis report for <code>main</code> branch is <a href="https://tier4.github.io/autoware-iv-metrics-dashboard/tidy/">here</a> (updated every Sunday).</p>
+<p><strong>Information:</strong> Due to the lack of the header files of CUDA or NVML, Perception modules and NVML GPU Monitor can not be analyzed correctly by clang-tidy-pr in autoware.iv repository. You may find some clang-errors and false positives.</p>
+<p>This document follows the convention of <a href="https://datatracker.ietf.org/doc/html/rfc2119">RFC2119</a>.</p>
+<h2 id="how-to-use-clang-tidy-on-your-local-machine">How to use Clang-Tidy on your local machine<a class="headerlink" href="#how-to-use-clang-tidy-on-your-local-machine" title="Permanent link">#</a></h2>
+<p>First, install Clang-Tidy.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ubuntu/Debian</span>
+sudo apt install clang-tidy
+</code></pre></div>
+<p>Next, build your package with <code>-DCMAKE_EXPORT_COMPILE_COMMANDS=ON</code> option.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ~/autoware.proj
+colcon build --cmake-args -DCMAKE_BUILD_TYPE<span class="o">=</span>Release -DCMAKE_EXPORT_COMPILE_COMMANDS<span class="o">=</span>ON
+</code></pre></div>
+<p>Finally, run <code>./scripts/clang-tidy-package.sh</code>.</p>
+<div class="highlight"><pre><span></span><code>./scripts/clang-tidy-package.sh &lt;path-to-your-package&gt;
+</code></pre></div>
+<p>For example:</p>
+<div class="highlight"><pre><span></span><code>./scripts/clang-tidy-package.sh src/autoware/autoware.iv/common/util/autoware_utils/
+</code></pre></div>
+<p>Or, execute Clang-Tidy directly.</p>
+<div class="highlight"><pre><span></span><code>clang-tidy -p build/compile_commands.json &lt;your-source-code&gt;
+</code></pre></div>
+<hr />
+<h2 id="severity-level">Severity Level<a class="headerlink" href="#severity-level" title="Permanent link">#</a></h2>
+<p>The severity level of check rules are defined by CodeChecker, not by Clang-Tidy itself. The level definitions of rules can be found <a href="https://github.com/Ericsson/codechecker/blob/a621d3978fa7441c8b8bc517ff2bac29d3df7fa7/config/labels/analyzers/clang-tidy.json">here</a>.</p>
+<h3 id="high">High<a class="headerlink" href="#high" title="Permanent link">#</a></h3>
+<p>We MUST fix the code problems pointed out by Clang-Tidy.</p>
+<h3 id="middle">Middle<a class="headerlink" href="#middle" title="Permanent link">#</a></h3>
+<p>We SHOULD fix the code problems pointed out by Clang-Tidy.</p>
+<h3 id="low">Low<a class="headerlink" href="#low" title="Permanent link">#</a></h3>
+<p>We MAY fix the code problems pointed out by Clang-Tidy. But some rules SHOULD NOT be ignored. See Rules section.</p>
+<h3 id="style">Style<a class="headerlink" href="#style" title="Permanent link">#</a></h3>
+<p>We MAY fix the code problems pointed out by Clang-Tidy. But some rules SHOULD NOT be ignored. See Rules section.</p>
+<hr />
+<h2 id="rules">Rules<a class="headerlink" href="#rules" title="Permanent link">#</a></h2>
+<p>Some rules are disabled by default to prevent false-positives that are annoying.</p>
+<h3 id="clang-diagnostic-"><code>clang-diagnostic-*</code><a class="headerlink" href="#clang-diagnostic-" title="Permanent link">#</a></h3>
+<p>We MUST fix the code problems detected by clang-diagnostic-* rules.</p>
+<p>These rules come from Clang++ compile-time errors and warnings.</p>
+<h3 id="boost-"><code>boost-*</code><a class="headerlink" href="#boost-" title="Permanent link">#</a></h3>
+<p>We MUST fix the code problems detected by boost-_ rules if these are not false-positives.</p>
+<h4 id="boost-use-to-string-low-doc">boost-use-to-string [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/boost-use-to-string.html">(doc)</a><a class="headerlink" href="#boost-use-to-string-low-doc" title="Permanent link">#</a></h4>
+<h3 id="bugprone-"><code>bugprone-*</code><a class="headerlink" href="#bugprone-" title="Permanent link">#</a></h3>
+<p>We SHOULD fix the code problems detected by bugprone-* rules if these are not false-positives.</p>
+<h4 id="bugprone-argument-comment-low-doc">bugprone-argument-comment [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-argument-comment.html">(doc)</a><a class="headerlink" href="#bugprone-argument-comment-low-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-assert-side-effect-medium-doc">bugprone-assert-side-effect [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-assert-side-effect.html">(doc)</a><a class="headerlink" href="#bugprone-assert-side-effect-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-bad-signal-to-kill-thread-medium-doc">bugprone-bad-signal-to-kill-thread [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-bad-signal-to-kill-thread.html">(doc)</a><a class="headerlink" href="#bugprone-bad-signal-to-kill-thread-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-bool-pointer-implicit-conversion-low-doc">bugprone-bool-pointer-implicit-conversion [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-bool-pointer-implicit-conversion.html">(doc)</a><a class="headerlink" href="#bugprone-bool-pointer-implicit-conversion-low-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-branch-clone-low-doc">bugprone-branch-clone [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-branch-clone.html">(doc)</a><a class="headerlink" href="#bugprone-branch-clone-low-doc" title="Permanent link">#</a></h4>
+<p>Sometimes the clones are intentional as follows. We MAY ignore safely.
+(Note that the following code violates the modernize-make-unique rule)</p>
+<div class="highlight"><pre><span></span><code><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">autoware_perception_msgs</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">Semantic</span><span class="o">::</span><span class="n">MOTORBIKE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="n">model_ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">normal</span><span class="o">::</span><span class="n">BoundingBoxModel</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">autoware_perception_msgs</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">Semantic</span><span class="o">::</span><span class="n">BICYCLE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="n">model_ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">normal</span><span class="o">::</span><span class="n">BoundingBoxModel</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<h4 id="bugprone-copy-constructor-init-medium-doc">bugprone-copy-constructor-init [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-copy-constructor-init.html">(doc)</a><a class="headerlink" href="#bugprone-copy-constructor-init-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-dangling-handle-high-doc">bugprone-dangling-handle [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-dangling-handle.html">(doc)</a><a class="headerlink" href="#bugprone-dangling-handle-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-dynamic-static-initializers-medium-doc">bugprone-dynamic-static-initializers [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-dynamic-static-initializers.html">(doc)</a><a class="headerlink" href="#bugprone-dynamic-static-initializers-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-exception-escape-medium-doc">bugprone-exception-escape [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-exception-escape.html">(doc)</a><a class="headerlink" href="#bugprone-exception-escape-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-fold-init-type-high-doc">bugprone-fold-init-type [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-fold-init-type.html">(doc)</a><a class="headerlink" href="#bugprone-fold-init-type-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-forward-declaration-namespace-low-doc">bugprone-forward-declaration-namespace [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-forward-declaration-namespace.html">(doc)</a><a class="headerlink" href="#bugprone-forward-declaration-namespace-low-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-forwarding-reference-overload-low-doc">bugprone-forwarding-reference-overload [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-forwarding-reference-overload.html">(doc)</a><a class="headerlink" href="#bugprone-forwarding-reference-overload-low-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-inaccurate-erase-high-doc">bugprone-inaccurate-erase [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-inaccurate-erase.html">(doc)</a><a class="headerlink" href="#bugprone-inaccurate-erase-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-incorrect-roundings-high-doc">bugprone-incorrect-roundings [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-incorrect-roundings.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#bugprone-incorrect-roundings-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-infinite-loop-medium-doc">(bugprone-infinite-loop) [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-infinite-loop.html">(doc)</a><a class="headerlink" href="#bugprone-infinite-loop-medium-doc" title="Permanent link">#</a></h4>
+<p>Disabled because the rule falls into the infinite-loop when checking some ROS functions, such as <code>spin()</code>.</p>
+<h4 id="bugprone-integer-division-medium-doc">bugprone-integer-division [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-integer-division.html">(doc)</a><a class="headerlink" href="#bugprone-integer-division-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-lambda-function-name-low-doc">bugprone-lambda-function-name [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-lambda-function-name.html">(doc)</a><a class="headerlink" href="#bugprone-lambda-function-name-low-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-macro-parentheses-medium-doc">bugprone-macro-parentheses [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-macro-parentheses.html">(doc)</a><a class="headerlink" href="#bugprone-macro-parentheses-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-macro-repeated-side-effects-medium-doc">bugprone-macro-repeated-side-effects [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-macro-repeated-side-effects.html">(doc)</a><a class="headerlink" href="#bugprone-macro-repeated-side-effects-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-misplaced-operator-in-strlen-in-alloc-medium-doc">bugprone-misplaced-operator-in-strlen-in-alloc [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-misplaced-operator-in-strlen-in-alloc.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#bugprone-misplaced-operator-in-strlen-in-alloc-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-misplaced-pointer-arithmetic-in-alloc-medium-doc">(bugprone-misplaced-pointer-arithmetic-in-alloc) [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-misplaced-pointer-arithmetic-in-alloc.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#bugprone-misplaced-pointer-arithmetic-in-alloc-medium-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="bugprone-misplaced-widening-cast-high-doc">bugprone-misplaced-widening-cast [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-misplaced-widening-cast.html">(doc)</a><a class="headerlink" href="#bugprone-misplaced-widening-cast-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-move-forwarding-reference-medium-doc">bugprone-move-forwarding-reference [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-move-forwarding-reference.html">(doc)</a><a class="headerlink" href="#bugprone-move-forwarding-reference-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-multiple-statement-macro-medium-doc">bugprone-multiple-statement-macro [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-multiple-statement-macro.html">(doc)</a><a class="headerlink" href="#bugprone-multiple-statement-macro-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-no-escape-undefined-doc">(bugprone-no-escape) [undefined] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-no-escape.html">(doc)</a><a class="headerlink" href="#bugprone-no-escape-undefined-doc" title="Permanent link">#</a></h4>
+<p>To be added to .clang-tidy.</p>
+<h4 id="bugprone-not-null-terminated-result-medium-doc">bugprone-not-null-terminated-result [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-not-null-terminated-result.html">(doc)</a><a class="headerlink" href="#bugprone-not-null-terminated-result-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-parent-virtual-call-medium-doc">bugprone-parent-virtual-call [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-parent-virtual-call.html">(doc)</a><a class="headerlink" href="#bugprone-parent-virtual-call-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-posix-return-undefined-doc">bugprone-posix-return [undefined] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-posix-return.html">(doc)</a><a class="headerlink" href="#bugprone-posix-return-undefined-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-redundant-branch-condition-low-doc">(bugprone-redundant-branch-condition) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-redundant-branch-condition.html">(doc)</a><a class="headerlink" href="#bugprone-redundant-branch-condition-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="bugprone-reserved-identifier-low-doc">(bugprone-reserved-identifier) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-reserved-identifier.html">(doc)</a><a class="headerlink" href="#bugprone-reserved-identifier-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled because ROS 2 coding naming style for inclusion guards violates the rule by default.</p>
+<h4 id="bugprone-signal-handler-undefined-doc">(bugprone-signal-handler) [undefined] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-signal-handler.html">(doc)</a><a class="headerlink" href="#bugprone-signal-handler-undefined-doc" title="Permanent link">#</a></h4>
+<p>To be added to .clang-tidy.</p>
+<h4 id="bugprone-signed-char-misuse-medium-doc">bugprone-signed-char-misuse [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-signed-char-misuse.html">(doc)</a><a class="headerlink" href="#bugprone-signed-char-misuse-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-sizeof-container-high-doc">bugprone-sizeof-container [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-sizeof-container.html">(doc)</a><a class="headerlink" href="#bugprone-sizeof-container-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-sizeof-expression-high-doc">bugprone-sizeof-expression [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-sizeof-expression.html">(doc)</a><a class="headerlink" href="#bugprone-sizeof-expression-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-spuriously-wake-up-functions-undefined-doc">(bugprone-spuriously-wake-up-functions) [undefined] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-spuriously-wake-up-functions.html">(doc)</a><a class="headerlink" href="#bugprone-spuriously-wake-up-functions-undefined-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-string-constructor-high-doc">bugprone-string-constructor [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-string-constructor.html">(doc)</a><a class="headerlink" href="#bugprone-string-constructor-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-string-integer-assignment-low-doc">bugprone-string-integer-assignment [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-string-integer-assignment.html">(doc)</a><a class="headerlink" href="#bugprone-string-integer-assignment-low-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-string-literal-with-embedded-nul-medium-doc">bugprone-string-literal-with-embedded-nul [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-string-literal-with-embedded-nul.html">(doc)</a><a class="headerlink" href="#bugprone-string-literal-with-embedded-nul-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-suspicious-enum-usage-high-doc">bugprone-suspicious-enum-usage [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-suspicious-enum-usage.html">(doc)</a><a class="headerlink" href="#bugprone-suspicious-enum-usage-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-suspicious-include-low-doc">(bugprone-suspicious-include) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-suspicious-include.html">(doc)</a><a class="headerlink" href="#bugprone-suspicious-include-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="bugprone-suspicious-memset-usage-high-doc">bugprone-suspicious-memset-usage [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-suspicious-memset-usage.html">(doc)</a><a class="headerlink" href="#bugprone-suspicious-memset-usage-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-suspicious-missing-comma-high-doc">bugprone-suspicious-missing-comma [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-suspicious-missing-comma.html">(doc)</a><a class="headerlink" href="#bugprone-suspicious-missing-comma-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-suspicious-semicolon-high-doc">bugprone-suspicious-semicolon [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-suspicious-semicolon.html">(doc)</a><a class="headerlink" href="#bugprone-suspicious-semicolon-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-suspicious-string-compare-medium-doc">bugprone-suspicious-string-compare [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-suspicious-string-compare.html">(doc)</a><a class="headerlink" href="#bugprone-suspicious-string-compare-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-swapped-arguments-high-doc">bugprone-swapped-arguments [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-swapped-arguments.html">(doc)</a><a class="headerlink" href="#bugprone-swapped-arguments-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-terminating-continue-medium-doc">bugprone-terminating-continue [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-terminating-continue.html">(doc)</a><a class="headerlink" href="#bugprone-terminating-continue-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-throw-keyword-missing-medium-doc">bugprone-throw-keyword-missing [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-throw-keyword-missing.html">(doc)</a><a class="headerlink" href="#bugprone-throw-keyword-missing-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-too-small-loop-variable-medium-doc">bugprone-too-small-loop-variable [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-too-small-loop-variable.html">(doc)</a><a class="headerlink" href="#bugprone-too-small-loop-variable-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-undefined-memory-manipulation-medium-doc">bugprone-undefined-memory-manipulation [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-undefined-memory-manipulation.html">(doc)</a><a class="headerlink" href="#bugprone-undefined-memory-manipulation-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-undelegated-constructor-medium-doc">bugprone-undelegated-constructor [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-undelegated-constructor.html">(doc)</a><a class="headerlink" href="#bugprone-undelegated-constructor-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-unhandled-exception-at-new-undefined-doc">(bugprone-unhandled-exception-at-new) [undefined] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-unhandled-exception-at-new.html">(doc)</a><a class="headerlink" href="#bugprone-unhandled-exception-at-new-undefined-doc" title="Permanent link">#</a></h4>
+<p>To be added.</p>
+<h4 id="bugprone-unhandled-self-assignment-medium-doc">bugprone-unhandled-self-assignment [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-unhandled-self-assignment.html">(doc)</a><a class="headerlink" href="#bugprone-unhandled-self-assignment-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-unused-raii-high-doc">bugprone-unused-raii [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-unused-raii.html">(doc)</a><a class="headerlink" href="#bugprone-unused-raii-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-unused-return-value-medium-doc">bugprone-unused-return-value [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-unused-return-value.html">(doc)</a><a class="headerlink" href="#bugprone-unused-return-value-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-use-after-move-high-doc">bugprone-use-after-move [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-use-after-move.html">(doc)</a><a class="headerlink" href="#bugprone-use-after-move-high-doc" title="Permanent link">#</a></h4>
+<h4 id="bugprone-virtual-near-miss-medium-doc">bugprone-virtual-near-miss [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/bugprone-virtual-near-miss.html">(doc)</a><a class="headerlink" href="#bugprone-virtual-near-miss-medium-doc" title="Permanent link">#</a></h4>
+<h3 id="cppcoreguidelines-"><code>cppcoreguidelines-*</code><a class="headerlink" href="#cppcoreguidelines-" title="Permanent link">#</a></h3>
+<p>We SHOULD fix the code problems detected by <code>cppcoreguidelines-*</code> rules if these are not false-positives.</p>
+<h4 id="cppcoreguidelines-avoid-goto-style-doc">cppcoreguidelines-avoid-goto [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-avoid-goto.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-avoid-goto-style-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-avoid-non-const-global-variables-low-doc">(cppcoreguidelines-avoid-non-const-global-variables) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-avoid-non-const-global-variables.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-avoid-non-const-global-variables-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="cppcoreguidelines-init-variables-medium-doc">cppcoreguidelines-init-variables [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-init-variables.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-init-variables-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-interfaces-global-init-low-doc">cppcoreguidelines-interfaces-global-init [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-interfaces-global-init.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-interfaces-global-init-low-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-macro-usage-low-doc">cppcoreguidelines-macro-usage [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-macro-usage.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-macro-usage-low-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-narrowing-conversions-medium-doc">cppcoreguidelines-narrowing-conversions [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-narrowing-conversions.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-narrowing-conversions-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-no-malloc-low-doc">cppcoreguidelines-no-malloc [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-no-malloc.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-no-malloc-low-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-owning-memory-style-doc">(cppcoreguidelines-owning-memory) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-owning-memory.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-owning-memory-style-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="cppcoreguidelines-prefer-member-initializer-style-doc">cppcoreguidelines-prefer-member-initializer [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-prefer-member-initializer.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-prefer-member-initializer-style-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="cppcoreguidelines-pro-bounds-array-to-pointer-decay-low-doc">(cppcoreguidelines-pro-bounds-array-to-pointer-decay) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-pro-bounds-array-to-pointer-decay.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-pro-bounds-array-to-pointer-decay-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="cppcoreguidelines-pro-bounds-constant-array-index-low-doc">(cppcoreguidelines-pro-bounds-constant-array-index) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-pro-bounds-constant-array-index.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-pro-bounds-constant-array-index-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="cppcoreguidelines-pro-bounds-pointer-arithmetic-low-doc">cppcoreguidelines-pro-bounds-pointer-arithmetic [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-pro-bounds-pointer-arithmetic.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-pro-bounds-pointer-arithmetic-low-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-pro-type-const-cast-low-doc">cppcoreguidelines-pro-type-const-cast [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-pro-type-const-cast.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-pro-type-const-cast-low-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-pro-type-cstyle-cast-low-doc">cppcoreguidelines-pro-type-cstyle-cast [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-pro-type-cstyle-cast.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#cppcoreguidelines-pro-type-cstyle-cast-low-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-pro-type-member-init-low-doc">cppcoreguidelines-pro-type-member-init [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-pro-type-member-init.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-pro-type-member-init-low-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-pro-type-reinterpret-cast-low-doc">cppcoreguidelines-pro-type-reinterpret-cast [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-pro-type-reinterpret-cast.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-pro-type-reinterpret-cast-low-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-pro-type-static-cast-downcast-low-doc">cppcoreguidelines-pro-type-static-cast-downcast [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-pro-type-static-cast-downcast.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-pro-type-static-cast-downcast-low-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-pro-type-union-access-low-doc">cppcoreguidelines-pro-type-union-access [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-pro-type-union-access.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-pro-type-union-access-low-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-pro-type-vararg-low-doc">(cppcoreguidelines-pro-type-vararg) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-pro-type-vararg.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#cppcoreguidelines-pro-type-vararg-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="cppcoreguidelines-slicing-low-doc">cppcoreguidelines-slicing [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-slicing.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-slicing-low-doc" title="Permanent link">#</a></h4>
+<h4 id="cppcoreguidelines-special-member-functions-low-doc">cppcoreguidelines-special-member-functions [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines-special-member-functions.html">(doc)</a><a class="headerlink" href="#cppcoreguidelines-special-member-functions-low-doc" title="Permanent link">#</a></h4>
+<h3 id="google-"><code>google-*</code><a class="headerlink" href="#google-" title="Permanent link">#</a></h3>
+<p>We SHOULD fix the code problems detected by <code>google-*</code> rules if these are not false-positives.</p>
+<h4 id="google-build-explicit-make-pair-medium-doc">google-build-explicit-make-pair [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-build-explicit-make-pair.html">(doc)</a><a class="headerlink" href="#google-build-explicit-make-pair-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="google-build-namespaces-medium-doc">google-build-namespaces [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-build-namespaces.html">(doc)</a><a class="headerlink" href="#google-build-namespaces-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="google-build-using-namespace-style-doc">google-build-using-namespace [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-build-using-namespace.html">(doc)</a><a class="headerlink" href="#google-build-using-namespace-style-doc" title="Permanent link">#</a></h4>
+<h4 id="google-default-arguments-low-doc">(google-default-arguments) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-default-arguments.html">(doc)</a><a class="headerlink" href="#google-default-arguments-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="google-explicit-constructor-medium-doc">google-explicit-constructor [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-explicit-constructor.html">(doc)</a><a class="headerlink" href="#google-explicit-constructor-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="google-global-names-in-headers-style-doc">google-global-names-in-headers [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-global-names-in-headers.html">(doc)</a><a class="headerlink" href="#google-global-names-in-headers-style-doc" title="Permanent link">#</a></h4>
+<h4 id="google-objc-avoid-nsobject-new-undefined-doc">(google-objc-avoid-nsobject-new) [undefined] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-objc-avoid-nsobject-new.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#google-objc-avoid-nsobject-new-undefined-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="google-objc-avoid-throwing-exception-undefined-doc">(google-objc-avoid-throwing-exception) [undefined] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-objc-avoid-throwing-exception.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#google-objc-avoid-throwing-exception-undefined-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="google-objc-function-naming-undefined-doc">(google-objc-function-naming) [undefined] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-objc-function-naming.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#google-objc-function-naming-undefined-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="google-objc-global-variable-declaration-undefined-doc">(google-objc-global-variable-declaration) [undefined] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-objc-global-variable-declaration.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#google-objc-global-variable-declaration-undefined-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="google-readability-avoid-underscore-in-googletest-name-style-doc">(google-readability-avoid-underscore-in-googletest-name) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-readability-avoid-underscore-in-googletest-name.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#google-readability-avoid-underscore-in-googletest-name-style-doc" title="Permanent link">#</a></h4>
+<h4 id="google-readability-casting-low-doc">(google-readability-casting) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-readability-casting.html">(doc)</a><a class="headerlink" href="#google-readability-casting-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="google-readability-todo-style-doc">(google-readability-todo) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-readability-todo.html">(doc)</a><a class="headerlink" href="#google-readability-todo-style-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="google-runtime-int-low-doc">(google-runtime-int) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-runtime-int.html">(doc)</a><a class="headerlink" href="#google-runtime-int-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="google-runtime-operator-medium-doc">(google-runtime-operator) [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-runtime-operator.html">(doc)</a><a class="headerlink" href="#google-runtime-operator-medium-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="google-upgrade-googletest-case-style-doc">google-upgrade-googletest-case [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/google-upgrade-googletest-case.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#google-upgrade-googletest-case-style-doc" title="Permanent link">#</a></h4>
+<h3 id="hicpp-"><code>hicpp-*</code><!--- cspell:disable-line --><a class="headerlink" href="#hicpp-" title="Permanent link">#</a></h3>
+<p>We SHOULD fix the code problems detected by <code>hicpp-*</code> rules if these are not false-positives.<!--- cspell:disable-line --></p>
+<h4 id="hicpp-exception-baseclass-low-doc">hicpp-exception-baseclass [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/hicpp-exception-baseclass.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#hicpp-exception-baseclass-low-doc" title="Permanent link">#</a></h4>
+<h4 id="hicpp-multiway-paths-covered-style-doc">hicpp-multiway-paths-covered [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/hicpp-multiway-paths-covered.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#hicpp-multiway-paths-covered-style-doc" title="Permanent link">#</a></h4>
+<h4 id="hicpp-no-assembler-low-doc">hicpp-no-assembler [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/hicpp-no-assembler.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#hicpp-no-assembler-low-doc" title="Permanent link">#</a></h4>
+<h4 id="hicpp-signed-bitwise-low-doc">hicpp-signed-bitwise [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/hicpp-signed-bitwise.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#hicpp-signed-bitwise-low-doc" title="Permanent link">#</a></h4>
+<h3 id="llvm-"><code>llvm-*</code><a class="headerlink" href="#llvm-" title="Permanent link">#</a></h3>
+<p>We MUST fix the code problems detected by <code>llvm-*</code> rules if these are not false-positives.</p>
+<h4 id="llvm-namespace-comment-low-doc">llvm-namespace-comment [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/llvm-namespace-comment.html">(doc)</a><a class="headerlink" href="#llvm-namespace-comment-low-doc" title="Permanent link">#</a></h4>
+<h3 id="misc-"><code>misc-*</code><a class="headerlink" href="#misc-" title="Permanent link">#</a></h3>
+<p>We SHOULD fix the code problems detected by <code>misc-*</code> rules if these are not false-positives.</p>
+<h4 id="misc-definitions-in-headers-medium-doc">misc-definitions-in-headers [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-definitions-in-headers.html">(doc)</a><a class="headerlink" href="#misc-definitions-in-headers-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="misc-misplaced-const-low-doc">misc-misplaced-const [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-misplaced-const.html">(doc)</a><a class="headerlink" href="#misc-misplaced-const-low-doc" title="Permanent link">#</a></h4>
+<h4 id="misc-new-delete-overloads-medium-doc">misc-new-delete-overloads [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-new-delete-overloads.html">(doc)</a><a class="headerlink" href="#misc-new-delete-overloads-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="misc-no-recursion-low-doc">misc-no-recursion [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-no-recursion.html">(doc)</a><a class="headerlink" href="#misc-no-recursion-low-doc" title="Permanent link">#</a></h4>
+<h4 id="misc-non-copyable-objects-high-doc">misc-non-copyable-objects [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-non-copyable-objects.html">(doc)</a><a class="headerlink" href="#misc-non-copyable-objects-high-doc" title="Permanent link">#</a></h4>
+<h4 id="misc-non-private-member-variables-in-classes-low-doc">(misc-non-private-member-variables-in-classes) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-non-private-member-variables-in-classes.html">(doc)</a><a class="headerlink" href="#misc-non-private-member-variables-in-classes-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled because of annoyance.</p>
+<h4 id="misc-redundant-expression-medium-doc">misc-redundant-expression [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-redundant-expression.html">(doc)</a><a class="headerlink" href="#misc-redundant-expression-medium-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="misc-static-assert-low-doc">misc-static-assert [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-static-assert.html">(doc)</a><a class="headerlink" href="#misc-static-assert-low-doc" title="Permanent link">#</a></h4>
+<h4 id="misc-throw-by-value-catch-by-reference-high-doc">misc-throw-by-value-catch-by-reference [HIGH] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-throw-by-value-catch-by-reference.html">(doc)</a><a class="headerlink" href="#misc-throw-by-value-catch-by-reference-high-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="misc-unconventional-assign-operator-medium-doc">misc-unconventional-assign-operator [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-unconventional-assign-operator.html">(doc)</a><a class="headerlink" href="#misc-unconventional-assign-operator-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="misc-uniqueptr-reset-release-medium-doc">misc-uniqueptr-reset-release [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-uniqueptr-reset-release.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#misc-uniqueptr-reset-release-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="misc-unused-alias-decls-low-doc">misc-unused-alias-decls [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-unused-alias-decls.html">(doc)</a><a class="headerlink" href="#misc-unused-alias-decls-low-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="misc-unused-parameters-low-doc">misc-unused-parameters [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-unused-parameters.html">(doc)</a><a class="headerlink" href="#misc-unused-parameters-low-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="misc-unused-using-decls-low-doc">misc-unused-using-decls [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/misc-unused-using-decls.html">(doc)</a><a class="headerlink" href="#misc-unused-using-decls-low-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h3 id="modernize-"><code>modernize-*</code><a class="headerlink" href="#modernize-" title="Permanent link">#</a></h3>
+<p>We SHOULD fix the code problems detected by <code>modernize-*</code> rules if these are not false-positives.</p>
+<h4 id="modernize-avoid-bind-style-doc">(modernize-avoid-bind) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-avoid-bind.html">(doc)</a><a class="headerlink" href="#modernize-avoid-bind-style-doc" title="Permanent link">#</a></h4>
+<p>Disabled because of incompatibility with ROS.</p>
+<h4 id="modernize-avoid-c-arrays-low-doc">modernize-avoid-c-arrays [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-avoid-c-arrays.html">(doc)</a><a class="headerlink" href="#modernize-avoid-c-arrays-low-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-concat-nested-namespaces-style-doc">modernize-concat-nested-namespaces [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-concat-nested-namespaces.html">(doc)</a><a class="headerlink" href="#modernize-concat-nested-namespaces-style-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-deprecated-headers-low-doc">modernize-deprecated-headers [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-deprecated-headers.html">(doc)</a><a class="headerlink" href="#modernize-deprecated-headers-low-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="modernize-deprecated-ios-base-aliases-low-doc">modernize-deprecated-ios-base-aliases [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-deprecated-ios-base-aliases.html">(doc)</a><a class="headerlink" href="#modernize-deprecated-ios-base-aliases-low-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-loop-convert-style-doc">modernize-loop-convert [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-loop-convert.html">(doc)</a><a class="headerlink" href="#modernize-loop-convert-style-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-make-shared-low-doc">modernize-make-shared [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-make-shared.html">(doc)</a><a class="headerlink" href="#modernize-make-shared-low-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-make-unique-low-doc">modernize-make-unique [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-make-unique.html">(doc)</a><a class="headerlink" href="#modernize-make-unique-low-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-pass-by-value-low-doc">modernize-pass-by-value [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-pass-by-value.html">(doc)</a><a class="headerlink" href="#modernize-pass-by-value-low-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-raw-string-literal-style-doc">modernize-raw-string-literal [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-raw-string-literal.html">(doc)</a><a class="headerlink" href="#modernize-raw-string-literal-style-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-redundant-void-arg-style-doc">modernize-redundant-void-arg [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-redundant-void-arg.html">(doc)</a><a class="headerlink" href="#modernize-redundant-void-arg-style-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="modernize-replace-auto-ptr-low-doc">modernize-replace-auto-ptr [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-replace-auto-ptr.html">(doc)</a><a class="headerlink" href="#modernize-replace-auto-ptr-low-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-replace-disallow-copy-and-assign-macro-low-doc">modernize-replace-disallow-copy-and-assign-macro [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-replace-disallow-copy-and-assign-macro.html#modernize-replace-disallow-copy-and-assign-macro">(doc)</a><a class="headerlink" href="#modernize-replace-disallow-copy-and-assign-macro-low-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-replace-random-shuffle-low-doc">modernize-replace-random-shuffle [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-replace-random-shuffle.html">(doc)</a><a class="headerlink" href="#modernize-replace-random-shuffle-low-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-return-braced-init-list-style-doc">modernize-return-braced-init-list [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-return-braced-init-list.html">(doc)</a><a class="headerlink" href="#modernize-return-braced-init-list-style-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-shrink-to-fit-style-doc">modernize-shrink-to-fit [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-shrink-to-fit.html">(doc)</a><a class="headerlink" href="#modernize-shrink-to-fit-style-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-unary-static-assert-style-doc">modernize-unary-static-assert [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-unary-static-assert.html">(doc)</a><a class="headerlink" href="#modernize-unary-static-assert-style-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-use-auto-style-doc">modernize-use-auto [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-auto.html">(doc)</a><a class="headerlink" href="#modernize-use-auto-style-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-use-bool-literals-style-doc">modernize-use-bool-literals [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-bool-literals.html">(doc)</a><a class="headerlink" href="#modernize-use-bool-literals-style-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="modernize-use-default-member-init-style-doc">modernize-use-default-member-init [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-default-member-init.html">(doc)</a><a class="headerlink" href="#modernize-use-default-member-init-style-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-use-emplace-style-doc">modernize-use-emplace [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-emplace.html">(doc)</a><a class="headerlink" href="#modernize-use-emplace-style-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="modernize-use-equals-default-style-doc">modernize-use-equals-default [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-equals-default.html">(doc)</a><a class="headerlink" href="#modernize-use-equals-default-style-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="modernize-use-equals-delete-style-doc">modernize-use-equals-delete [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-equals-delete.html">(doc)</a><a class="headerlink" href="#modernize-use-equals-delete-style-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="modernize-use-nodiscard-low-doc">modernize-use-nodiscard [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-nodiscard.html">(doc)</a><a class="headerlink" href="#modernize-use-nodiscard-low-doc" title="Permanent link">#</a></h4>
+<p>We SHOULD follow the rule if we use C++17.</p>
+<h4 id="modernize-use-noexcept-low-doc">modernize-use-noexcept [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-noexcept.html">(doc)</a><a class="headerlink" href="#modernize-use-noexcept-low-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-use-nullptr-low-doc">modernize-use-nullptr [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-nullptr.html">(doc)</a><a class="headerlink" href="#modernize-use-nullptr-low-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="modernize-use-override-low-doc">modernize-use-override [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-override.html">(doc)</a><a class="headerlink" href="#modernize-use-override-low-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="modernize-use-trailing-return-type-low-doc">(modernize-use-trailing-return-type) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-trailing-return-type.html">(doc)</a><a class="headerlink" href="#modernize-use-trailing-return-type-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="modernize-use-transparent-functors-low-doc">modernize-use-transparent-functors [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-transparent-functors.html">(doc)</a><a class="headerlink" href="#modernize-use-transparent-functors-low-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-use-uncaught-exceptions-style-doc">modernize-use-uncaught-exceptions [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-uncaught-exceptions.html">(doc)</a><a class="headerlink" href="#modernize-use-uncaught-exceptions-style-doc" title="Permanent link">#</a></h4>
+<h4 id="modernize-use-using-style-doc">modernize-use-using [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/modernize-use-using.html">(doc)</a><a class="headerlink" href="#modernize-use-using-style-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h3 id="openmp-"><code>openmp-*</code><a class="headerlink" href="#openmp-" title="Permanent link">#</a></h3>
+<h4 id="openmp-use-default-none-undefined-doc">openmp-use-default-none [undefined] <a href="https://clang.llvm.org/extra/clang-tidy/checks/openmp-use-default-none.html">(doc)</a><a class="headerlink" href="#openmp-use-default-none-undefined-doc" title="Permanent link">#</a></h4>
+<h3 id="performance-"><code>performance-*</code><a class="headerlink" href="#performance-" title="Permanent link">#</a></h3>
+<p>We SHOULD fix the code problems detected by <code>performance-*</code> rules if these are not false-positives.</p>
+<h4 id="performance-faster-string-find-low-doc">performance-faster-string-find [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-faster-string-find.html">(doc)</a><a class="headerlink" href="#performance-faster-string-find-low-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="performance-for-range-copy-low-doc">performance-for-range-copy [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-for-range-copy.html">(doc)</a><a class="headerlink" href="#performance-for-range-copy-low-doc" title="Permanent link">#</a></h4>
+<h4 id="performance-implicit-conversion-in-loop-low-doc">performance-implicit-conversion-in-loop [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-implicit-conversion-in-loop.html">(doc)</a><a class="headerlink" href="#performance-implicit-conversion-in-loop-low-doc" title="Permanent link">#</a></h4>
+<h4 id="performance-inefficient-algorithm-medium-doc">performance-inefficient-algorithm [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-inefficient-algorithm.html">(doc)</a><a class="headerlink" href="#performance-inefficient-algorithm-medium-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="performance-inefficient-string-concatenation-low-doc">performance-inefficient-string-concatenation [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-inefficient-string-concatenation.html">(doc)</a><a class="headerlink" href="#performance-inefficient-string-concatenation-low-doc" title="Permanent link">#</a></h4>
+<h4 id="performance-inefficient-vector-operation-low-doc">performance-inefficient-vector-operation [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-inefficient-vector-operation.html">(doc)</a><a class="headerlink" href="#performance-inefficient-vector-operation-low-doc" title="Permanent link">#</a></h4>
+<h4 id="performance-move-const-arg-medium-doc">performance-move-const-arg [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-move-const-arg.html">(doc)</a><a class="headerlink" href="#performance-move-const-arg-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="performance-move-constructor-init-medium-doc">performance-move-constructor-init [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-move-constructor-init.html">(doc)</a><a class="headerlink" href="#performance-move-constructor-init-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="performance-no-automatic-move-low-doc">performance-no-automatic-move [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-no-automatic-move.html">(doc)</a><a class="headerlink" href="#performance-no-automatic-move-low-doc" title="Permanent link">#</a></h4>
+<h4 id="performance-no-int-to-ptr-low-doc">performance-no-int-to-ptr [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-no-int-to-ptr.html">(doc)</a><a class="headerlink" href="#performance-no-int-to-ptr-low-doc" title="Permanent link">#</a></h4>
+<h4 id="performance-noexcept-move-constructor-medium-doc">performance-noexcept-move-constructor [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-noexcept-move-constructor.html">(doc)</a><a class="headerlink" href="#performance-noexcept-move-constructor-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="performance-trivially-destructible-low-doc">performance-trivially-destructible [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-trivially-destructible.html">(doc)</a><a class="headerlink" href="#performance-trivially-destructible-low-doc" title="Permanent link">#</a></h4>
+<h4 id="performance-type-promotion-in-math-fn-low-doc">performance-type-promotion-in-math-fn [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-type-promotion-in-math-fn.html">(doc)</a><a class="headerlink" href="#performance-type-promotion-in-math-fn-low-doc" title="Permanent link">#</a></h4>
+<h4 id="performance-unnecessary-copy-initialization-low-doc">performance-unnecessary-copy-initialization [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-unnecessary-copy-initialization.html">(doc)</a><a class="headerlink" href="#performance-unnecessary-copy-initialization-low-doc" title="Permanent link">#</a></h4>
+<h4 id="performance-unnecessary-value-param-low-doc">performance-unnecessary-value-param [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/performance-unnecessary-value-param.html">(doc)</a><a class="headerlink" href="#performance-unnecessary-value-param-low-doc" title="Permanent link">#</a></h4>
+<p>We MAY ignore the warning safely if Ptr, SharedPtr, and ConstSharedPtr are pointed out as follows (which is currently suppressed by the AllowedTypes option in .clang-tidy).</p>
+<div class="highlight"><pre><span></span><code>src/autoware/AutowareArchitectureProposal.iv/planning/scenario_planning/lane_driving/motion_planning/obstacle_stop_planner/src/adaptive_cruise_control.cpp:176:58:
+warning: the const qualified parameter <span class="s1">&#39;current_velocity_ptr&#39;</span> is copied <span class="k">for</span> each invocation<span class="p">;</span> consider making it a reference <span class="o">[</span>performance-unnecessary-value-param<span class="o">]</span>
+const geometry_msgs::msg::TwistStamped::ConstSharedPtr current_velocity_ptr, bool _ need_to_stop,
+^
+<span class="p">&amp;</span>
+</code></pre></div>
+<h3 id="portability-"><code>portability-*</code><a class="headerlink" href="#portability-" title="Permanent link">#</a></h3>
+<h4 id="portability-simd-intrinsics-style-doc">portability-simd-intrinsics [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/portability-simd-intrinsics.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#portability-simd-intrinsics-style-doc" title="Permanent link">#</a></h4>
+<h3 id="readability-"><code>readability-*</code><a class="headerlink" href="#readability-" title="Permanent link">#</a></h3>
+<p>We SHOULD fix the code problems detected by <code>bugprone-*</code> rules if these are not false-positives.</p>
+<h4 id="readability-avoid-const-params-in-decls-style-doc">(readability-avoid-const-params-in-decls) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-avoid-const-params-in-decls.html">(doc)</a><a class="headerlink" href="#readability-avoid-const-params-in-decls-style-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="readability-braces-around-statements-style-doc">(readability-braces-around-statements) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-braces-around-statements.html">(doc)</a><a class="headerlink" href="#readability-braces-around-statements-style-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="readability-const-return-type-low-doc">readability-const-return-type [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-const-return-type.html">(doc)</a><a class="headerlink" href="#readability-const-return-type-low-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-container-size-empty-style-doc">readability-container-size-empty [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-container-size-empty.html">(doc)</a><a class="headerlink" href="#readability-container-size-empty-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-convert-member-functions-to-static-style-doc">readability-convert-member-functions-to-static [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-convert-member-functions-to-static.html">(doc)</a><a class="headerlink" href="#readability-convert-member-functions-to-static-style-doc" title="Permanent link">#</a></h4>
+<p>Optional. It depends on the design of the class. We MAY ignore this warning safely.</p>
+<h4 id="readability-delete-null-pointer-style-doc">readability-delete-null-pointer [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-delete-null-pointer.html">(doc)</a><a class="headerlink" href="#readability-delete-null-pointer-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-else-after-return-style-doc">readability-else-after-return [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-else-after-return.html">(doc)</a><a class="headerlink" href="#readability-else-after-return-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-function-cognitive-complexity-style-doc">readability-function-cognitive-complexity [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-function-cognitive-complexity.html">(doc)</a><a class="headerlink" href="#readability-function-cognitive-complexity-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-function-size-style-doc">(readability-function-size) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-function-size.html">(doc)</a><a class="headerlink" href="#readability-function-size-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-identifier-length-style-doc">(readability-identifier-length) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-identifier-length.html">(doc)</a><a class="headerlink" href="#readability-identifier-length-style-doc" title="Permanent link">#</a></h4>
+<p>To be added.</p>
+<h4 id="readability-identifier-naming-style-doc">(readability-identifier-naming) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-identifier-naming.html">(doc)</a><a class="headerlink" href="#readability-identifier-naming-style-doc" title="Permanent link">#</a></h4>
+<p>To be added.</p>
+<h4 id="readability-implicit-bool-conversion-style-doc">(readability-implicit-bool-conversion) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-implicit-bool-conversion.html">(doc)</a><a class="headerlink" href="#readability-implicit-bool-conversion-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-inconsistent-declaration-parameter-name-style-doc">readability-inconsistent-declaration-parameter-name [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-inconsistent-declaration-parameter-name.html">(doc)</a><a class="headerlink" href="#readability-inconsistent-declaration-parameter-name-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-isolate-declaration-style-doc">readability-isolate-declaration [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-isolate-declaration.html">(doc)</a><a class="headerlink" href="#readability-isolate-declaration-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-magic-numbers-style-doc">(readability-magic-numbers) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-magic-numbers.html">(doc)</a><a class="headerlink" href="#readability-magic-numbers-style-doc" title="Permanent link">#</a></h4>
+<p>Disabled because of annoyance.</p>
+<h4 id="readability-make-member-function-const-style-doc">readability-make-member-function-const [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-make-member-function-const.html">(doc)</a><a class="headerlink" href="#readability-make-member-function-const-style-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="readability-misleading-indentation-low-doc">readability-misleading-indentation [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-misleading-indentation.html">(doc)</a><a class="headerlink" href="#readability-misleading-indentation-low-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="readability-misplaced-array-index-style-doc">readability-misplaced-array-index [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-misplaced-array-index.html">(doc)</a><a class="headerlink" href="#readability-misplaced-array-index-style-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="readability-named-parameter-style-doc">(readability-named-parameter) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-named-parameter.html">(doc)</a><a class="headerlink" href="#readability-named-parameter-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-non-const-parameter-style-doc">readability-non-const-parameter [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-non-const-parameter.html">(doc)</a><a class="headerlink" href="#readability-non-const-parameter-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-qualified-auto-low-doc">(readability-qualified-auto) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-qualified-auto.html">(doc)</a><a class="headerlink" href="#readability-qualified-auto-low-doc" title="Permanent link">#</a></h4>
+<p>To be added.</p>
+<h4 id="readability-redundant-access-specifiers-style-doc">readability-redundant-access-specifiers [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-redundant-access-specifiers.html">(doc)</a><a class="headerlink" href="#readability-redundant-access-specifiers-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-redundant-control-flow-style-doc">readability-redundant-control-flow [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-redundant-control-flow.html">(doc)</a><a class="headerlink" href="#readability-redundant-control-flow-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-redundant-declaration-style-doc">readability-redundant-declaration [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-redundant-declaration.html">(doc)</a><a class="headerlink" href="#readability-redundant-declaration-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-redundant-function-ptr-dereference-style-doc">readability-redundant-function-ptr-dereference [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-redundant-function-ptr-dereference.html">(doc)</a><a class="headerlink" href="#readability-redundant-function-ptr-dereference-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-redundant-member-init-style-doc">readability-redundant-member-init [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-redundant-member-init.html">(doc)</a><a class="headerlink" href="#readability-redundant-member-init-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-redundant-preprocessor-style-doc">(readability-redundant-preprocessor) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-redundant-preprocessor.html">(doc)</a><a class="headerlink" href="#readability-redundant-preprocessor-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-redundant-smartptr-get-style-doc">readability-redundant-smartptr-get [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-redundant-smartptr-get.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#readability-redundant-smartptr-get-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-redundant-string-cstr-style-doc">readability-redundant-string-cstr [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-redundant-string-cstr.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#readability-redundant-string-cstr-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-redundant-string-init-style-doc">readability-redundant-string-init [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-redundant-string-cstr.html">(doc)</a><a class="headerlink" href="#readability-redundant-string-init-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-simplify-boolean-expr-medium-doc">readability-simplify-boolean-expr [MEDIUM] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-simplify-boolean-expr.html">(doc)</a><a class="headerlink" href="#readability-simplify-boolean-expr-medium-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-simplify-subscript-expr-style-doc">readability-simplify-subscript-expr [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-simplify-subscript-expr.html">(doc)</a><a class="headerlink" href="#readability-simplify-subscript-expr-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-static-accessed-through-instance-style-doc">readability-static-accessed-through-instance [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-static-accessed-through-instance.html">(doc)</a><a class="headerlink" href="#readability-static-accessed-through-instance-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-static-definition-in-anonymous-namespace-style-doc">readability-static-definition-in-anonymous-namespace [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-static-definition-in-anonymous-namespace.html">(doc)</a><a class="headerlink" href="#readability-static-definition-in-anonymous-namespace-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-string-compare-low-doc">readability-string-compare [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-string-compare.html">(doc)</a><a class="headerlink" href="#readability-string-compare-low-doc" title="Permanent link">#</a></h4>
+<p>MUST.</p>
+<h4 id="readability-suspicious-call-argument-low-doc">(readability-suspicious-call-argument) [LOW] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-suspicious-call-argument.html">(doc)</a><a class="headerlink" href="#readability-suspicious-call-argument-low-doc" title="Permanent link">#</a></h4>
+<p>Disabled.</p>
+<h4 id="readability-uniqueptr-delete-release-style-doc">readability-uniqueptr-delete-release [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-uniqueptr-delete-release.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#readability-uniqueptr-delete-release-style-doc" title="Permanent link">#</a></h4>
+<h4 id="readability-uppercase-literal-suffix-style-doc">(readability-uppercase-literal-suffix) [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-uppercase-literal-suffix.html">(doc)</a><a class="headerlink" href="#readability-uppercase-literal-suffix-style-doc" title="Permanent link">#</a></h4>
+<p>Disabled temporarily. Will be enabled to merge the code to Autoware.Auto.</p>
+<h4 id="readability-use-anyofallof-style-doc">readability-use-anyofallof [STYLE] <a href="https://clang.llvm.org/extra/clang-tidy/checks/readability-use-anyofallof.html">(doc)</a><!--- cspell:disable-line --><a class="headerlink" href="#readability-use-anyofallof-style-doc" title="Permanent link">#</a></h4>
+<p>Optional. We MAY ignore the warning safely.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../UnitTestGuideline/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Unit test guideline" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Unit test guideline
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../knowhow/PortingToROS2/" class="md-footer__link md-footer__link--next" aria-label="Next: Porting ROS1 code to ROS2" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Porting ROS1 code to ROS2
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2021 Tier IV, Inc.
+          </div>
+        
+        
+          Made with
+          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+            Material for MkDocs
+          </a>
+        
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.b1047164.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      
+    
+  </body>
+</html>
